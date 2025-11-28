@@ -1,0 +1,51 @@
+/* --- FILE: static/quanlytin.css --- */
+
+/* CSS riêng cho bảng quản lý */
+.bang-quan-ly {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.bang-quan-ly th, 
+.bang-quan-ly td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.bang-quan-ly th {
+    background-color: #34495e;
+    color: white;
+}
+
+/* Màu sắc trạng thái */
+.trang-thai-cho {
+    color: #e67e22; /* Màu cam */
+    font-weight: bold;
+}
+
+.trang-thai-duyet {
+    color: #27ae60; /* Màu xanh lá */
+    font-weight: bold;
+}
+
+/* Các nút hành động */
+.btn-sua {
+    background-color: #f39c12;
+    color: white;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+.btn-sua:hover { background-color: #e67e22; }
+
+.btn-xoa {
+    background-color: #c0392b;
+    color: white;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 4px;
+}
+.btn-xoa:hover { background-color: #e74c3c; }

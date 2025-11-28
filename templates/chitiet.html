@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ phong.ten }} - Trọ Sinh Viên</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-top">
+            <div class="page-title">Trọ Sinh Viên</div>
+            <div class="header-actions">
+                {% if current_user.is_authenticated %}
+                    <span class="user-hello">Hi, {{ current_user.full_name }}</span>
+                    {% if current_user.role == 'student' %}
+                        <a href="/lich-su" class="btn-header">Lịch sử</a>
+                    {% endif %}
+                    {% if current_user.role == 'landlord' or current_user.role == 'admin' %}
+                        <a href="/quanlytin" class="btn-header" style="background-color: #f39c12; color: white;">Quản lý</a>
+                    {% endif %}
+                    <a href="/profile" class="btn-header">Hồ sơ</a>
+                    <a href="/logout" class="btn-header" style="background-color: #7f8c8d; color: white;">Thoát</a>
+                {% else %}
+                    <a href="/login" class="btn-header">Đăng Nhập</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="detail-container">
+        <a href="/" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Quay lại danh sách</a>
+
+        <div class="detail-layout">
+            
+            <div class="detail-left">
+                
+                <div class="detail-image">
+                    <img src="/static/images/{{ phong.anh }}" alt="Ảnh phòng trọ">
+                    {% if phong.status == 'da_thue' %}
+                        <div class="overlay-status">ĐÃ HẾT PHÒNG</div>
+                    {% endif %}
+                </div>
+
+                <div class="info-section">
+                    <div class="room-header">
+                        <h1 class="room-title">{{ phong.ten }}</h1>
+                        {% if phong.status == 'da_thue' %}
+                            <span class="badge-status het-phong">🚫 Đã cho thuê</span>
+                        {% else %}
+                            <span class="badge-status con-phong">✅ Còn phòng</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="room-meta">
+                        <span class="room-price">{{ "{:,.0f}".format(phong.gia|float).replace(",", ".") }} VNĐ/tháng</span>
+                    </div>
+                    
+                    <p class="room-address"><i class="fa-solid fa-location-dot" style="color: #e74c3c;"></i> {{ phong.dia_chi }}</p>
+                    
+                    <hr>
+                    
+                    <h3>Mô tả chi tiết</h3>
+                    <div class="room-desc">
+                        {{ phong.mo_ta }}
+                    </div>
+                </div>
+
+                <div class="comment-section">
+                    <h3>💬 Đánh giá & Bình luận</h3>
+                    
+                    {% if current_user.is_authenticated and current_user.role == 'student' %}
+                    <form action="/gui_binh_luan/{{ phong.id }}" method="POST" class="comment-form">
+                        <div class="form-row">
+                            <label><i class="fa-solid fa-star" style="color: #f1c40f;"></i> Đánh giá:</label>
+                            <select name="rating" class="rating-select">
+                                <option value="5">5 Sao - Tuyệt vời</option>
+                                <option value="4">4 Sao - Tốt</option>
+                                <option value="3">3 Sao - Bình thường</option>
+                                <option value="2">2 Sao - Tệ</option>
+                                <option value="1">1 Sao - Rất tệ</option>
+                            </select>
+                        </div>
+                        <textarea name="noi_dung" rows="3" class="comment-input" placeholder="Chia sẻ trải nghiệm thực tế của bạn về phòng này..." required></textarea>
+                        <button type="submit" class="btn-submit-comment">Gửi Đánh Giá</button>
+                    </form>
+                    {% endif %}
+
+                    <div class="comment-list">
+                        {% for bl in binh_luan %}
+                        <div class="comment-item">
+                            <div class="comment-avatar">{{ bl.full_name[0] }}</div>
+                            <div class="comment-content">
+                                <div class="comment-header">
+                                    <strong>{{ bl.full_name }}</strong>
+                                    <div class="stars">
+                                        {% for i in range(bl.rating) %}<i class="fa-solid fa-star"></i>{% endfor %}
+                                    </div>
+                                </div>
+                                <p>{{ bl.noi_dung }}</p>
+                                <small class="comment-date">{{ bl.created_at }}</small>
+                            </div>
+                        </div>
+                        {% else %}
+                            <p class="no-comment">Chưa có đánh giá nào. Hãy là người đầu tiên!</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-right">
+                <div class="owner-card">
+                    <h3>Thông tin chủ trọ</h3>
+                    <div class="owner-profile">
+                        <div class="owner-avatar-img">👤</div>
+                        <div class="owner-text">
+                            <strong>{{ phong.full_name }}</strong>
+                            <p>Chủ nhà uy tín</p>
+                        </div>
+                    </div>
+
+                    {% if phong.phone %}
+                        <div class="contact-buttons">
+                            <a href="tel:{{ phong.phone }}" class="btn-contact call">
+                                <i class="fa-solid fa-phone"></i> Gọi điện
+                            </a>
+                            <a href="https://zalo.me/{{ phong.phone }}" target="_blank" class="btn-contact zalo">
+                                <i class="fa-solid fa-comment"></i> Zalo
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    <hr>
+
+                    {% if phong.status != 'da_thue' %}
+                        {% if current_user.is_authenticated and current_user.role == 'student' %}
+                            <h4>Nhắn tin cho chủ nhà</h4>
+                            <form action="/gui_lien_he/{{ phong.id }}" method="POST">
+                                <textarea name="message" rows="4" class="msg-input" placeholder="Ví dụ: Em muốn hẹn xem phòng vào 5h chiều nay..." required></textarea>
+                                <button type="submit" class="btn-contact send">
+                                    <i class="fa-regular fa-paper-plane"></i> Gửi yêu cầu
+                                </button>
+                            </form>
+                        {% elif not current_user.is_authenticated %}
+                            <div class="login-prompt">
+                                <p>Bạn muốn thuê phòng này?</p>
+                                <a href="/login" class="btn-contact login">Đăng nhập để liên hệ</a>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="alert-box">
+                            ⚠️ Phòng này đã hết.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh Sách Liên Hệ</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .hop-tin-nhan {
+            background: white; border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 5px;
+        }
+        .thong-tin-sv { font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
+        .ngay-gui { font-size: 0.8em; color: #7f8c8d; float: right; }
+        .noi-dung-tin { background: #f9f9f9; padding: 10px; border-radius: 4px; font-style: italic; }
+        .btn-call { 
+            display: inline-block; background: #27ae60; color: white; padding: 5px 15px; 
+            text-decoration: none; border-radius: 20px; font-size: 0.9em; margin-top: 5px; 
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">🏠 TimTroSinhVien.com</div>
+        <nav><a href="/quanlytin">⬅ Quay lại quản lý tin</a></nav>
+    </header>
+
+    <main>
+        <div class="khung-dang-tin" style="max-width: 800px;">
+            <h2>Khách quan tâm phòng: {{ phong.ten }}</h2>
+            <p>📍 {{ phong.dia_chi }} | 💰 {{ phong.gia }}</p>
+            <hr>
+
+            {% if ds_lien_he %}
+                {% for lh in ds_lien_he %}
+                <div class="hop-tin-nhan">
+                    <span class="ngay-gui">{{ lh.created_at }}</span>
+                    <div class="thong-tin-sv">
+                        👤 {{ lh.full_name }} 
+                    </div>
+                    
+                    <div class="noi-dung-tin">
+                        "{{ lh.message }}"
+                    </div>
+
+                    <div style="margin-top: 10px;">
+                        <a href="tel:{{ lh.phone }}" class="btn-call">📞 Gọi: {{ lh.phone }}</a>
+                        <a href="mailto:{{ lh.email }}" style="color: #3498db; margin-left: 10px;">📧 Gửi Email</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="text-align: center; color: #7f8c8d; padding: 30px;">
+                    Chưa có sinh viên nào liên hệ phòng này.
+                </p>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

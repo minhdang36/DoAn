@@ -1,0 +1,400 @@
+/* =========================================
+   1. CẤU HÌNH CHUNG (GIỮ NGUYÊN CỐT LÕI)
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #FAF9F6; /* ĐỔI: Màu nền kem nhạt sang trọng */
+    color: #4a4a4a;
+    line-height: 1.6;
+}
+
+a { text-decoration: none; color: inherit; transition: 0.3s; }
+ul { list-style: none; }
+
+/* =========================================
+   2. HEADER & MENU (NÂNG CẤP GIAO DIỆN)
+   ========================================= */
+header {
+    background-color: #FAF9F6; /* Màu kem đồng bộ */
+    padding: 15px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Bóng đổ nhẹ hiện đại */
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-title { font-size: 22px; font-weight: 800; color: #3e2723; } /* Chữ màu nâu đậm */
+
+/* Button trên Header */
+.btn-header {
+    background-color: #E0E0E0;
+    padding: 8px 15px;
+    border-radius: 20px; /* Bo tròn mềm mại */
+    font-size: 13px;
+    font-weight: bold;
+    color: #333;
+}
+.btn-header:hover { background-color: #d6d6d6; }
+
+/* Thanh tìm kiếm giữ nguyên chức năng nhưng đổi màu */
+.search-box {
+    display: flex;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    padding: 8px 15px;
+    border-radius: 25px;
+    align-items: center;
+    max-width: 600px;
+    margin: 15px auto 0;
+}
+.search-box input { border: none; background: transparent; outline: none; flex: 1; }
+.search-box button {
+    background-color: #8D6E63; /* ĐỔI: Màu nâu đất */
+    color: white; border: none;
+    padding: 6px 20px; border-radius: 20px;
+    cursor: pointer; font-weight: bold;
+}
+
+/* =========================================
+   3. TRANG CHỦ (DANH SÁCH THẺ NGANG)
+   ========================================= */
+main { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+/* Bộ lọc */
+.filter-section { margin-bottom: 20px; }
+.filter-row { display: flex; gap: 10px; }
+.filter-item {
+    background: white; padding: 8px 15px; border-radius: 15px;
+    font-size: 13px; font-weight: 600; color: #555;
+    border: 1px solid #ddd; cursor: pointer;
+}
+
+/* Thẻ bài đăng (Room Card) - Layout ngang mới */
+.room-card {
+    background-color: #EBE4D8; /* ĐỔI: Nền thẻ màu be đậm */
+    border-radius: 16px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+.room-card:hover { transform: translateY(-3px); }
+
+/* Ảnh phòng */
+.card-img { width: 140px; height: 110px; flex-shrink: 0; }
+.card-img img {
+    width: 100%; height: 100%; object-fit: cover;
+    border-radius: 12px;
+}
+
+/* Thông tin phòng */
+.card-info { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.card-info h4 { font-size: 17px; font-weight: 700; color: #3e2723; margin: 0; }
+.card-info .status { font-size: 13px; color: #666; margin: 0; }
+.card-info .price { font-weight: 800; color: #c0392b; font-size: 16px; }
+
+/* Nút chi tiết */
+.btn-detail {
+    background-color: #8D6E63; /* ĐỔI: Màu nâu */
+    color: white; padding: 8px 18px; border-radius: 20px;
+    font-size: 12px; font-weight: bold;
+}
+
+/* =========================================
+   4. TRANG CHI TIẾT (GIỮ CẤU TRÚC CŨ - NÂNG CẤP MÀU)
+   ========================================= */
+/* Vẫn dùng class cũ .noi-dung-chi-tiet nhưng làm đẹp hơn */
+.detail-container { max-width: 1100px; margin: 0 auto; }
+
+.detail-layout { display: flex; gap: 30px; }
+.detail-left { flex: 2; }
+.detail-right { flex: 1; }
+
+.detail-image {
+    border-radius: 20px; overflow: hidden; margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.detail-image img { width: 100%; display: block; }
+
+.info-section, .hop-lien-he, .comment-section {
+    background: white;
+    padding: 25px;
+    border-radius: 20px; /* Bo góc lớn hơn */
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02); /* Bóng mờ tinh tế */
+}
+
+/* Tiêu đề và giá trong trang chi tiết */
+.room-title { font-size: 24px; color: #3e2723; margin-bottom: 10px; }
+.room-price { font-size: 20px; font-weight: bold; color: #c0392b; }
+
+/* Cột phải (Sticky) */
+.owner-card {
+    background: white; padding: 25px; border-radius: 20px;
+    position: sticky; top: 80px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* Các nút liên hệ */
+.btn-contact {
+    display: block; width: 100%; text-align: center;
+    padding: 12px; border-radius: 12px; margin-bottom: 10px;
+    font-weight: bold; border: none; cursor: pointer;
+}
+.btn-call { background: #27ae60; color: white; }
+.btn-zalo { background: #0068ff; color: white; }
+.btn-send { background: #e67e22; color: white; }
+
+/* =========================================
+   5. FORM (ĐĂNG TIN / ĐĂNG NHẬP / ĐĂNG KÝ)
+   ========================================= */
+/* Vẫn giữ class .khung-dang-tin cũ của bạn */
+.khung-dang-tin {
+    background-color: white;
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 30px;
+    border-radius: 20px; /* Bo tròn Soft UI */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Bóng đổ mềm */
+}
+
+.khung-dang-tin h2 {
+    color: #3e2723; /* Đổi màu xanh cũ thành màu nâu */
+    text-align: center; margin-bottom: 20px;
+}
+
+.nhom-input { margin-bottom: 15px; }
+.nhom-input label { display: block; font-weight: 600; margin-bottom: 5px; color: #555; }
+
+/* Input làm đẹp hơn */
+.nhom-input input, 
+.nhom-input textarea, 
+.nhom-input select {
+    width: 100%; padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px; /* Bo tròn input */
+    background-color: #fafafa;
+    font-size: 14px; outline: none;
+}
+.nhom-input input:focus { border-color: #8D6E63; background: #fff; }
+
+.hang-ngang { display: flex; gap: 20px; }
+.hang-ngang .nhom-input { flex: 1; }
+
+/* Nút Đăng tin (Thay màu cam cũ bằng màu nâu/cam đất sang trọng) */
+.nut-dang-tin {
+    width: 100%; padding: 12px;
+    background-color: #8D6E63; /* ĐỔI MÀU */
+    color: white; font-weight: bold;
+    border: none; border-radius: 12px;
+    cursor: pointer; font-size: 16px; margin-top: 10px;
+    transition: 0.3s;
+}
+.nut-dang-tin:hover { background-color: #6d4c41; transform: translateY(-2px); }
+
+/* =========================================
+   6. BẢNG QUẢN LÝ (CHO TRANG QUẢN LÝ TIN)
+   ========================================= */
+.bang-quan-ly {
+    width: 100%; border-collapse: collapse; margin-top: 20px;
+    background: white; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.bang-quan-ly th, .bang-quan-ly td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+.bang-quan-ly th { background-color: #3e2723; color: white; } /* Đầu bảng màu nâu */
+
+/* =========================================
+   7. RESPONSIVE (GIỮ NGUYÊN TÍNH NĂNG MOBILE CỦA BẠN)
+   ========================================= */
+@media (max-width: 768px) {
+    .room-card { flex-direction: column; align-items: flex-start; }
+    .card-img { width: 100%; height: 180px; }
+    .btn-detail { width: 100%; text-align: center; margin-top: 10px; }
+    
+    .detail-layout { flex-direction: column; }
+    .detail-right { order: -1; }
+    
+    .hang-ngang { flex-direction: column; gap: 0; } /* Form trên mobile */
+}
+/* --- CSS CHO BỘ LỌC MỚI (DROPDOWN) --- */
+
+.filter-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filter-item {
+    background: white;
+    padding: 0 15px; /* Padding ngang */
+    border-radius: 20px; /* Bo tròn mạnh */
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px; /* Chiều cao cố định cho đều */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.filter-item i {
+    color: #8D6E63; /* Icon màu nâu */
+}
+
+/* Biến thẻ select thành trong suốt để giống text thường */
+.filter-item select {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    appearance: none; /* Ẩn mũi tên mặc định xấu xí của trình duyệt */
+    -webkit-appearance: none;
+    padding-right: 15px; /* Chừa chỗ cho icon mũi tên giả nếu muốn */
+}
+
+.btn-clear-filter {
+    font-size: 13px;
+    color: #c0392b;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-left: 10px;
+}
+/* --- CSS NÂNG CẤP CHI TIẾT PHÒNG --- */
+
+/* 1. Phần Bình Luận Đẹp Hơn */
+.comment-form {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+}
+
+.form-row { margin-bottom: 10px; font-weight: bold; color: #555; }
+
+.rating-select {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: white;
+    cursor: pointer;
+    font-weight: bold;
+    color: #333;
+}
+
+.comment-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: white;
+    font-family: inherit;
+    resize: vertical; /* Cho phép kéo giãn */
+    margin-bottom: 10px;
+}
+.comment-input:focus { border-color: #8D6E63; outline: none; }
+
+.btn-submit-comment {
+    background-color: #8D6E63;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    float: right;
+}
+
+/* Danh sách comment giống Facebook */
+.comment-item {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 15px;
+}
+
+.comment-avatar {
+    width: 40px; height: 40px;
+    background-color: #34495e;
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.comment-content { flex: 1; }
+
+.comment-header {
+    display: flex; justify-content: space-between;
+    margin-bottom: 5px;
+}
+.stars i { color: #f1c40f; font-size: 12px; }
+.comment-date { font-size: 12px; color: #999; display: block; margin-top: 5px; }
+
+/* 2. Thẻ Chủ Nhà (Sticky Sidebar) */
+.owner-card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05); /* Bóng đổ xịn hơn */
+    position: sticky;
+    top: 90px;
+    border: 1px solid #f0f0f0;
+}
+
+.owner-profile {
+    display: flex; align-items: center; gap: 15px; margin-bottom: 20px;
+}
+.owner-avatar-img {
+    width: 50px; height: 50px; background: #eee; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 24px;
+}
+
+.contact-buttons { display: flex; gap: 10px; margin-bottom: 15px; }
+.btn-contact {
+    flex: 1; text-align: center;
+    padding: 10px; border-radius: 10px;
+    font-weight: bold; font-size: 14px;
+    color: white; transition: 0.2s;
+}
+.btn-contact:hover { opacity: 0.9; transform: translateY(-2px); }
+
+.call { background: linear-gradient(45deg, #27ae60, #2ecc71); }
+.zalo { background: linear-gradient(45deg, #0068ff, #42a5f5); }
+.send { background: linear-gradient(45deg, #e67e22, #f39c12); width: 100%; border: none; cursor: pointer;}
+.login { background: #34495e; display: block; margin-top: 10px; }
+
+.msg-input {
+    width: 100%; padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background: #fafafa;
+    margin-bottom: 10px;
+}
+.msg-input:focus { background: white; border-color: #e67e22; outline: none; }
+
+/* 3. Tinh chỉnh Header Chi tiết */
+.room-header { display: flex; align-items: center; justify-content: space-between; }
+.room-price { font-size: 24px; color: #c0392b; font-weight: 800; }

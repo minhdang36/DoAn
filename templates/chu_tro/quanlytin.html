@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản Lý Tin Đăng</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/quanlytin.css">
+</head>
+<body>
+    <header>
+        <div class="logo">🏠 TimTroSinhVien.com</div>
+        <nav>
+            <a href="/">Trang chủ</a>
+            <a href="/dangtin">Đăng tin mới</a>
+            <span style="color: white; margin-left: 15px;">Xin chào, {{ user.full_name }}</span>
+            <a href="/logout">Đăng xuất</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Quản lý danh sách bài đăng</h2>
+        
+        {% if danh_sach_cua_toi %}
+            <table class="bang-quan-ly">
+                <thead>
+                    <tr>
+                        <th style="width: 100px;">Ảnh</th>
+                        <th>Thông tin phòng</th>
+                        <th>Giá & Trạng thái</th>
+                        <th>Khách quan tâm</th>
+                        <th style="width: 180px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for phong in danh_sach_cua_toi %}
+                    <tr>
+                        <td><img src="/static/images/{{ phong.anh }}" width="100%" style="border-radius: 4px;"></td>
+                        <td>
+                            <strong>{{ phong.ten }}</strong><br>
+                            <small>📍 {{ phong.dia_chi }}</small>
+                        </td>
+                        <td>
+                            {% if phong.is_approved == 1 %}
+                                <div style="margin-bottom: 5px;"><small>Admin:</small> <span class="trang-thai-duyet">✅ Đã duyệt</span></div>
+                            {% else %}
+                                <div style="margin-bottom: 5px;"><small>Admin:</small> <span class="trang-thai-cho">⏳ Chờ duyệt</span></div>
+                            {% endif %}
+
+                            {% if phong.status == 'con_phong' %}
+                                <a href="/doi-trang-thai/{{ phong.id }}" style="color: white; background: #27ae60; padding: 3px 8px; border-radius: 4px; text-decoration: none; font-size: 12px;">
+                                    🏠 Còn phòng (Bấm để đóng)
+                                </a>
+                            {% else %}
+                                <a href="/doi-trang-thai/{{ phong.id }}" style="color: white; background: #7f8c8d; padding: 3px 8px; border-radius: 4px; text-decoration: none; font-size: 12px;">
+                                    🔒 Đã cho thuê (Bấm mở lại)
+                                </a>
+                            {% endif %}
+                        </td>
+                        
+                        <td style="text-align: center;">
+                            {% if phong.so_luot_lien_he > 0 %}
+                                <span style="font-size: 1.2em; font-weight: bold; color: blue;">{{ phong.so_luot_lien_he }}</span> yêu cầu<br>
+                                <a href="/xem-lien-he/{{ phong.id }}" style="color: blue; text-decoration: underline; font-size: 0.9em;">Xem danh sách</a>
+                            {% else %}
+                                <span style="color: #999;">Chưa có</span>
+                            {% endif %}
+                        </td>
+                        
+                        <td>
+                            <a href="/suatin/{{ phong.id }}" class="btn-sua">✏️ Sửa</a>
+                            <a href="/xoatin/{{ phong.id }}" class="btn-xoa" onclick="return confirm('Xóa bài này?')">🗑️ Xóa</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p style="text-align: center;">Bạn chưa có bài đăng nào. <a href="/dangtin">Đăng ngay!</a></p>
+        {% endif %}
+    </main>
+</body>
+</html>

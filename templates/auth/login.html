@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng Nhập - Tìm Trọ</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">🏠 TimTroSinhVien.com</div>
+        <nav><a href="/">Trang chủ</a></nav>
+    </header>
+    <main>
+        <div class="khung-dang-tin" style="max-width: 400px;">
+            <h2>Đăng Nhập Hệ Thống</h2>
+            <form action="/login" method="POST">
+                <div class="nhom-input">
+                    <label>Tên đăng nhập:</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="nhom-input">
+                    <label>Mật khẩu:</label>
+                    <input type="password" name="password" required>
+                </div>
+                <button type="submit" class="nut-dang-tin">Đăng Nhập</button>
+            </form>
+            <p style="margin-top: 15px;">Chưa có tài khoản? <a href="/register">Đăng ký ngay</a></p>
+        </div>
+    </main>
+</body>
+</html>

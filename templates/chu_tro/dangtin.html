@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Tin Phòng Trọ Mới</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">🏠 TimTroSinhVien.com</div>
+        <nav>
+            <a href="/">Trang chủ</a>
+            {% if current_user.is_authenticated %}
+        
+                {% if current_user.role == 'landlord' or current_user.role == 'admin' %}
+                    <a href="/dangtin">Đăng tin</a>
+                {% endif %}
+
+                {% if current_user.role == 'admin' %}
+                    <a href="/admin" style="color: yellow;">★ Trang Admin</a>
+                {% endif %}
+                <a href="/profile" style="color: white; margin-left: 15px; text-decoration: underline;">
+                    Xin chào, {{ current_user.full_name }} 👤
+                </a>
+                <a href="/logout">Đăng xuất</a>
+            {% else %}
+                <a href="/login">Đăng nhập</a>
+                <a href="/register">Đăng ký</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        <div class="khung-dang-tin">
+            <h2>Đăng tin phòng trọ mới</h2>
+            <p>Nhập thông tin phòng trọ của bạn để tiếp cận hàng ngàn sinh viên.</p>
+            
+            <form action="/dangtin" method="POST" enctype="multipart/form-data">
+                
+                <div class="nhom-input">
+                    <label>Tiêu đề tin đăng:</label>
+                    <input type="text" name="ten" placeholder="VD: Phòng trọ giá rẻ gần ĐH Bách Khoa..." required>
+                </div>
+
+                <div class="hang-ngang">
+                    <div class="nhom-input">
+                        <label>Giá cho thuê (VNĐ):</label>
+                        <input type="number" name="gia" placeholder="VD: 3000000" required>
+                    </div>
+                    <div class="nhom-input">
+                        <label>Diện tích (m2):</label>
+                        <input type="number" name="dien_tich" placeholder="VD: 25">
+                    </div>
+                </div>
+                <div class="nhom-input">
+                    <label>Loại phòng:</label>
+                    <select name="loai_phong" required style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #fafafa;">
+                        <option value="">-- Chọn loại phòng --</option>
+                        <option value="Khép kín">Phòng trọ khép kín</option>
+                        <option value="Chung cư">Chung cư mini</option>
+                        <option value="Trọ">Phòng trọ giá rẻ</option>
+                        <option value="Nguyên căn">Nhà nguyên căn</option>
+                        <option value="KTX">Ký túc xá / Homestay</option>
+                    </select>
+                </div>
+                <div class="nhom-input">
+                    <label>Địa chỉ chi tiết:</label>
+                    <input type="text" name="dia_chi" placeholder="Số nhà, ngõ, tên đường..." required>
+                </div>
+
+                <div class="nhom-input">
+                    <label>Mô tả thêm (Tiện ích, giờ giấc...):</label>
+                    <textarea rows="5" name="mo_ta" placeholder="Nhập mô tả chi tiết về phòng..."></textarea>
+                </div>
+
+                <div class="nhom-input">
+                    <label>Hình ảnh phòng:</label>
+                    <input type="file" name="hinh_anh" accept="image/*" required>
+                </div>
+
+                <button type="submit" class="nut-dang-tin">Đăng Tin Ngay</button>
+
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>Bản quyền © 2025 - Website Hỗ Trợ Sinh Viên</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý người dùng</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .admin-container { display: flex; min-height: 100vh; }
+        .sidebar-admin { width: 250px; background: #2c3e50; color: white; padding: 20px; }
+        .sidebar-admin a { display: block; color: white; padding: 10px; text-decoration: none; border-bottom: 1px solid #34495e; }
+        .content-admin { flex: 1; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background: #ecf0f1; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="sidebar-admin">
+            <h3>👮 ADMIN PANEL</h3>
+            <a href="/admin">📊 Thống kê chung</a>
+            <a href="/admin/users" style="background: #34495e;">👥 Quản lý người dùng</a>
+            <a href="/admin/posts">📝 Quản lý bài đăng</a>
+            <a href="/admin/backup">💾 Sao lưu dữ liệu</a>
+            <a href="/">🏠 Về trang chủ</a>
+        </div>
+
+        <div class="content-admin">
+            <h2>Danh sách người dùng</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Họ tên</th>
+                        <th>Vai trò</th>
+                        <th>Email / SĐT</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                    <tr>
+                        <td>{{ u.id }}</td>
+                        <td>{{ u.full_name }}<br><small>({{ u.username }})</small></td>
+                        <td>
+                            {% if u.role == 'admin' %} <span style="color:red; font-weight:bold;">Admin</span>
+                            {% elif u.role == 'landlord' %} <span style="color:blue;">Chủ trọ</span>
+                            {% else %} Sinh viên {% endif %}
+                        </td>
+                        <td>{{ u.email }}<br>{{ u.phone }}</td>
+                        <td>
+                            {% if u.role != 'admin' %}
+                            <a href="/admin/user/delete/{{ u.id }}" onclick="return confirm('CẢNH BÁO: Xóa người dùng này sẽ xóa toàn bộ bài đăng và tin nhắn của họ. Bạn chắc chắn chứ?')" style="color: red;">🗑️ Xóa</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

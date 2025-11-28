@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch Sử Thuê Trọ</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">🏠 TimTroSinhVien.com</div>
+        <nav>
+            <a href="/">Trang chủ</a>
+            <a href="/profile">Hồ sơ cá nhân</a>
+            <a href="/logout">Đăng xuất</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Lịch sử liên hệ thuê phòng của bạn</h2>
+        
+        {% if lich_su %}
+            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <thead>
+                    <tr style="background-color: #34495e; color: white;">
+                        <th style="padding: 10px;">Phòng trọ</th>
+                        <th style="padding: 10px;">Tin nhắn bạn gửi</th>
+                        <th style="padding: 10px;">Thời gian</th>
+                        <th style="padding: 10px;">Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in lich_su %}
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 10px;">
+                            <img src="/static/images/{{ item.anh }}" width="60" style="vertical-align: middle;">
+                            <a href="/chitiet/{{ item.post_id }}"><strong>{{ item.ten }}</strong></a><br>
+                            <small>{{ item.gia }}</small>
+                        </td>
+                        <td style="padding: 10px;">{{ item.message }}</td>
+                        <td style="padding: 10px;">{{ item.created_at }}</td>
+                        <td style="padding: 10px;">
+                            {% if item.status == 'pending' %}
+                                <span style="color: orange;">⏳ Đang chờ chủ nhà</span>
+                            {% else %}
+                                <span style="color: green;">✅ Đã phản hồi</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Bạn chưa liên hệ thuê phòng nào cả. <a href="/">Tìm phòng ngay</a></p>
+        {% endif %}
+    </main>
+</body>
+</html>

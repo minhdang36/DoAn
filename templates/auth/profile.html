@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thông Tin Cá Nhân</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">🏠 TimTroSinhVien.com</div>
+        <nav>
+            <a href="/">Trang chủ</a>
+            <a href="/logout">Đăng xuất</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="khung-dang-tin" style="max-width: 600px;">
+            <h2>Hồ sơ cá nhân</h2>
+            
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <p style="color: green; text-align: center; font-weight: bold;">{{ messages[0] }}</p>
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+                
+                <div class="nhom-input">
+                    <label>Tên đăng nhập (Không thể sửa):</label>
+                    <input type="text" value="{{ user_info.username }}" disabled style="background-color: #eee;">
+                </div>
+
+                <div class="nhom-input">
+                    <label>Họ và Tên:</label>
+                    <input type="text" name="full_name" value="{{ user_info.full_name }}" required>
+                </div>
+
+                {% if user_info.role == 'student' %}
+                <div class="hang-ngang">
+                    <div class="nhom-input">
+                        <label>Ngày sinh:</label>
+                        <input type="date" name="dob" value="{{ user_info.dob }}">
+                    </div>
+                    <div class="nhom-input">
+                        <label>Giới tính:</label>
+                        <select name="gender" style="width: 100%; padding: 10px;">
+                            <option value="Nam" {% if user_info.gender == 'Nam' %}selected{% endif %}>Nam</option>
+                            <option value="Nữ" {% if user_info.gender == 'Nữ' %}selected{% endif %}>Nữ</option>
+                            <option value="Khác" {% if user_info.gender == 'Khác' %}selected{% endif %}>Khác</option>
+                        </select>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if user_info.role == 'landlord' %}
+                <div class="nhom-input">
+                    <label>Số Căn cước công dân (CCCD):</label>
+                    <input type="text" name="cccd" value="{{ user_info.cccd or '' }}" placeholder="Nhập số CCCD...">
+                </div>
+                {% endif %}
+
+                <div class="nhom-input">
+                    <label>Số điện thoại:</label>
+                    <input type="text" name="phone" value="{{ user_info.phone or '' }}" placeholder="Nhập SĐT..." required>
+                </div>
+
+                <div class="nhom-input">
+                    <label>Email:</label>
+                    <input type="email" name="email" value="{{ user_info.email or '' }}" placeholder="Nhập Email..." required>
+                </div>
+
+                <button type="submit" class="nut-dang-tin" style="background-color: #2980b9;">Lưu Thay Đổi</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

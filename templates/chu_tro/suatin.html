@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Sửa Tin Đăng</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">🏠 TimTroSinhVien.com</div>
+        <nav><a href="/quanlytin">Quay lại quản lý</a></nav>
+    </header>
+
+    <main>
+        <div class="khung-dang-tin">
+            <h2>Chỉnh sửa thông tin phòng</h2>
+            <form method="POST" enctype="multipart/form-data">
+                
+                <div class="nhom-input">
+                    <label>Tiêu đề:</label>
+                    <input type="text" name="ten" value="{{ phong.ten }}" required>
+                </div>
+
+                <div class="hang-ngang">
+                    <div class="nhom-input">
+                        <label>Giá (VNĐ):</label>
+                        <input type="text" name="gia" value="{{ phong.gia }}" required>
+                    </div>
+                </div>
+
+                <div class="nhom-input">
+                    <label>Địa chỉ:</label>
+                    <input type="text" name="dia_chi" value="{{ phong.dia_chi }}" required>
+                </div>
+                <div class="nhom-input">
+                    <label>Loại phòng:</label>
+                    <select name="loai_phong" required style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 10px;">
+                        <option value="Khép kín" {% if phong.loai_phong == 'Khép kín' %}selected{% endif %}>Phòng trọ khép kín</option>
+                        <option value="Chung cư" {% if phong.loai_phong == 'Chung cư' %}selected{% endif %}>Chung cư mini</option>
+                        <option value="Trọ" {% if phong.loai_phong == 'Trọ' %}selected{% endif %}>Phòng trọ giá rẻ</option>
+                        <option value="Nguyên căn" {% if phong.loai_phong == 'Nguyên căn' %}selected{% endif %}>Nhà nguyên căn</option>
+                        <option value="KTX" {% if phong.loai_phong == 'KTX' %}selected{% endif %}>Ký túc xá / Homestay</option>
+                    </select>
+                </div>
+                <div class="nhom-input">
+                    <label>Mô tả:</label>
+                    <textarea name="mo_ta" rows="5">{{ phong.mo_ta }}</textarea>
+                </div>
+
+                <p><i>(Tính năng đổi ảnh đang được cập nhật...)</i></p>
+
+                <button type="submit" class="nut-dang-tin" style="background-color: #2980b9;">Lưu Thay Đổi</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
