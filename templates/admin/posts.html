@@ -1,62 +1,91 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Quản lý bài đăng</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <style>
-        .admin-container { display: flex; min-height: 100vh; }
-        .sidebar-admin { width: 250px; background: #2c3e50; color: white; padding: 20px; }
-        .sidebar-admin a { display: block; color: white; padding: 10px; text-decoration: none; border-bottom: 1px solid #34495e; }
-        .content-admin { flex: 1; padding: 20px; }
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-    </style>
-</head>
-<body>
-    <div class="admin-container">
-        <div class="sidebar-admin">
-            <h3>👮 ADMIN PANEL</h3>
-            <a href="/admin">📊 Thống kê chung</a>
-            <a href="/admin/users">👥 Quản lý người dùng</a>
-            <a href="/admin/posts" style="background: #34495e;">📝 Quản lý bài đăng</a>
-            <a href="/admin/backup">💾 Sao lưu dữ liệu</a>
-            <a href="/">🏠 Về trang chủ</a>
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4">
+        
+        <div class="col-lg-3">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="fw-bold text-primary mb-0"><i class="fa-solid fa-user-shield me-2"></i> Admin Panel</h5>
+                </div>
+                <div class="list-group list-group-flush rounded-bottom-4">
+                    <a href="/admin" class="list-group-item list-group-item-action border-0 py-3 text-secondary">
+                        <i class="fa-solid fa-chart-pie me-2"></i> Thống kê chung
+                    </a>
+                    <a href="/admin/users" class="list-group-item list-group-item-action border-0 py-3 text-secondary">
+                        <i class="fa-solid fa-users me-2"></i> Quản lý người dùng
+                    </a>
+                    <a href="/admin/posts" class="list-group-item list-group-item-action active fw-bold border-0 py-3">
+                        <i class="fa-solid fa-file-lines me-2"></i> Quản lý bài đăng
+                    </a>
+                    <a href="/admin/utilities" class="list-group-item list-group-item-action border-0 py-3 text-secondary">
+                        <i class="fa-solid fa-list-check me-2"></i> Quản lý tiện ích
+                    </a>
+                    <a href="/admin/backup" class="list-group-item list-group-item-action border-0 py-3 text-secondary">
+                        <i class="fa-solid fa-database me-2"></i> Sao lưu dữ liệu
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <div class="content-admin">
-            <h2>Tất cả bài đăng ({{ posts|length }})</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tiêu đề</th>
-                        <th>Người đăng</th>
-                        <th>Trạng thái</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for p in posts %}
-                    <tr>
-                        <td>{{ p.id }}</td>
-                        <td><a href="/chitiet/{{ p.id }}" target="_blank">{{ p.ten }}</a></td>
-                        <td>{{ p.full_name }}</td>
-                        <td>
-                            {% if p.is_approved == 1 %} <span style="color:green;">Đã duyệt</span>
-                            {% else %} <span style="color:orange;">Chờ duyệt</span> {% endif %}
-                        </td>
-                        <td>
-                            {% if p.is_approved == 0 %}
-                                <a href="/admin/duyet/{{ p.id }}" style="color: green; margin-right: 10px;">✅ Duyệt</a>
-                            {% endif %}
-                            <a href="/admin/xoa/{{ p.id }}" onclick="return confirm('Xóa bài vi phạm này?')" style="color: red;">❌ Xóa vi phạm</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold text-dark">Kiểm Duyệt Bài Đăng</h3>
+                <span class="badge bg-secondary rounded-pill">Tổng: {{ posts|length }}</span>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="py-3 ps-4">Phòng trọ</th>
+                                <th class="py-3">Người đăng</th>
+                                <th class="py-3">Trạng thái</th>
+                                <th class="py-3 text-end pe-4">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in posts %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <img src="/static/images/{{ p.anh }}" class="rounded-3 me-3" width="70" height="50" style="object-fit: cover;">
+                                        <div>
+                                            <a href="/chitiet/{{ p.id }}" target="_blank" class="fw-bold text-dark text-decoration-none">{{ p.ten }}</a>
+                                            <br><small class="text-primary fw-bold">{{ "{:,.0f}".format(p.gia|float).replace(",", ".") }} đ</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-secondary">{{ p.full_name }}</span><br>
+                                    <small class="text-muted">@{{ p.username }}</small>
+                                </td>
+                                <td>
+                                    {% if p.is_approved == 1 %}
+                                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill">Đã duyệt</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark rounded-pill">Chờ duyệt</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end pe-4">
+                                    {% if p.is_approved == 0 %}
+                                        <a href="/admin/duyet/{{ p.id }}" class="btn btn-sm btn-success rounded-pill px-3 me-1">
+                                            <i class="fa-solid fa-check me-1"></i> Duyệt
+                                        </a>
+                                    {% endif %}
+                                    <a href="/admin/xoa/{{ p.id }}" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Xóa bài vi phạm này?')">
+                                        <i class="fa-solid fa-trash me-1"></i> Xóa
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

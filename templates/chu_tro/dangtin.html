@@ -1,94 +1,135 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng Tin Phòng Trọ Mới</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
+{% extends "layout.html" %}
 
-    <header>
-        <div class="logo">🏠 TimTroSinhVien.com</div>
-        <nav>
-            <a href="/">Trang chủ</a>
-            {% if current_user.is_authenticated %}
-        
-                {% if current_user.role == 'landlord' or current_user.role == 'admin' %}
-                    <a href="/dangtin">Đăng tin</a>
-                {% endif %}
-
-                {% if current_user.role == 'admin' %}
-                    <a href="/admin" style="color: yellow;">★ Trang Admin</a>
-                {% endif %}
-                <a href="/profile" style="color: white; margin-left: 15px; text-decoration: underline;">
-                    Xin chào, {{ current_user.full_name }} 👤
-                </a>
-                <a href="/logout">Đăng xuất</a>
-            {% else %}
-                <a href="/login">Đăng nhập</a>
-                <a href="/register">Đăng ký</a>
-            {% endif %}
-        </nav>
-    </header>
-
-    <main>
-        <div class="khung-dang-tin">
-            <h2>Đăng tin phòng trọ mới</h2>
-            <p>Nhập thông tin phòng trọ của bạn để tiếp cận hàng ngàn sinh viên.</p>
-            
-            <form action="/dangtin" method="POST" enctype="multipart/form-data">
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow rounded-4 p-4 p-md-5">
                 
-                <div class="nhom-input">
-                    <label>Tiêu đề tin đăng:</label>
-                    <input type="text" name="ten" placeholder="VD: Phòng trọ giá rẻ gần ĐH Bách Khoa..." required>
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold text-primary"><i class="fa-solid fa-pen-to-square"></i> Đăng Tin Phòng Trọ</h2>
+                    <p class="text-muted">Nhập đầy đủ thông tin để thu hút sinh viên thuê phòng nhanh nhất.</p>
                 </div>
 
-                <div class="hang-ngang">
-                    <div class="nhom-input">
-                        <label>Giá cho thuê (VNĐ):</label>
-                        <input type="number" name="gia" placeholder="VD: 3000000" required>
+                <form action="/dangtin" method="POST" enctype="multipart/form-data" id="form-dang-tin">
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tiêu đề tin (Tối đa 255 ký tự)</label>
+                        <input type="text" name="ten" class="form-control bg-light border-0 rounded-3 py-2" 
+                               placeholder="VD: Phòng trọ giá rẻ Bách Khoa, đầy đủ tiện nghi..." required maxlength="255">
                     </div>
-                    <div class="nhom-input">
-                        <label>Diện tích (m2):</label>
-                        <input type="number" name="dien_tich" placeholder="VD: 25">
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Giá thuê (VNĐ)</label>
+                            <input type="text" name="gia" id="gia-input" 
+                                   class="form-control bg-light border-0 rounded-3 py-2 fw-bold text-primary" 
+                                   placeholder="VD: 3.000.000" required maxlength="20" autocomplete="off">
+                            <small id="doc-so-tien" class="fw-bold fst-italic text-success ms-1" style="font-size: 12px;"></small>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Diện tích (m²)</label>
+                            <input type="number" name="dien_tich" class="form-control bg-light border-0 rounded-3 py-2" placeholder="25" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Loại phòng</label>
+                            <select name="loai_phong" class="form-select bg-light border-0 rounded-3 py-2" required>
+                                <option value="">-- Chọn --</option>
+                                <option value="Khép kín">Khép kín</option>
+                                <option value="Chung cư">Chung cư mini</option>
+                                <option value="Trọ">Trọ giá rẻ</option>
+                                <option value="Nguyên căn">Nhà nguyên căn</option>
+                                <option value="KTX">KTX / Homestay</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="nhom-input">
-                    <label>Loại phòng:</label>
-                    <select name="loai_phong" required style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #fafafa;">
-                        <option value="">-- Chọn loại phòng --</option>
-                        <option value="Khép kín">Phòng trọ khép kín</option>
-                        <option value="Chung cư">Chung cư mini</option>
-                        <option value="Trọ">Phòng trọ giá rẻ</option>
-                        <option value="Nguyên căn">Nhà nguyên căn</option>
-                        <option value="KTX">Ký túc xá / Homestay</option>
-                    </select>
-                </div>
-                <div class="nhom-input">
-                    <label>Địa chỉ chi tiết:</label>
-                    <input type="text" name="dia_chi" placeholder="Số nhà, ngõ, tên đường..." required>
-                </div>
 
-                <div class="nhom-input">
-                    <label>Mô tả thêm (Tiện ích, giờ giấc...):</label>
-                    <textarea rows="5" name="mo_ta" placeholder="Nhập mô tả chi tiết về phòng..."></textarea>
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tiện ích có sẵn</label>
+                        <div class="row g-2">
+                            {% if ds_tien_ich %}
+                                {% for ti in ds_tien_ich %}
+                                <div class="col-6 col-md-4">
+                                    <div class="form-check p-2 border rounded-3 bg-white">
+                                        <input class="form-check-input ms-1" type="checkbox" name="tien_ich" value="{{ ti.id }}" id="ti_{{ ti.id }}">
+                                        <label class="form-check-label d-flex align-items-center gap-2 ms-2 cursor-pointer" for="ti_{{ ti.id }}">
+                                            <i class="fa-solid {{ ti.icon }} text-primary"></i> {{ ti.ten_tien_ich }}
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-muted small">Chưa có tiện ích nào trong hệ thống.</p>
+                            {% endif %}
+                        </div>
+                    </div>
 
-                <div class="nhom-input">
-                    <label>Hình ảnh phòng:</label>
-                    <input type="file" name="hinh_anh" accept="image/*" required>
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Địa chỉ chi tiết</label>
+                        <input type="text" name="dia_chi" class="form-control bg-light border-0 rounded-3 py-2" placeholder="Số nhà, ngõ, tên đường, quận..." required>
+                    </div>
 
-                <button type="submit" class="nut-dang-tin">Đăng Tin Ngay</button>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Mô tả thêm</label>
+                        <textarea name="mo_ta" rows="5" class="form-control bg-light border-0 rounded-3" placeholder="Ví dụ: Giờ giấc tự do, điện nước giá dân..."></textarea>
+                    </div>
 
-            </form>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label fw-bold">Ảnh bìa (Bắt buộc)</label>
+                            <input type="file" name="hinh_anh" class="form-control border-0 bg-light rounded-3" accept="image/*" required>
+                            <div class="form-text small">Ảnh này sẽ hiện ngoài trang chủ.</div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Ảnh chi tiết (Chọn nhiều)</label>
+                            <input type="file" name="anh_phu" class="form-control border-0 bg-light rounded-3" accept="image/*" multiple>
+                            <div class="form-text small">Giữ phím <strong>Ctrl</strong> (hoặc Command) để chọn nhiều ảnh cùng lúc.</div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary rounded-pill py-3 fw-bold fs-5 shadow-sm hover-up">
+                            <i class="fa-solid fa-cloud-arrow-up me-2"></i> Đăng Tin Ngay
+                        </button>
+                    </div>
+
+                </form>
+            </div>
         </div>
-    </main>
+    </div>
+</div>
 
-    <footer>
-        <p>Bản quyền © 2025 - Website Hỗ Trợ Sinh Viên</p>
-    </footer>
+<script>
+    const giaInput = document.getElementById('gia-input');
+    const docSoText = document.getElementById('doc-so-tien');
+    const form = document.getElementById('form-dang-tin');
 
-</body>
-</html>
+    giaInput.addEventListener('input', function(e) {
+        let rawValue = this.value.replace(/\D/g, '');
+        if (rawValue === '') {
+            this.value = '';
+            docSoText.innerText = '';
+            return;
+        }
+        let formattedValue = new Intl.NumberFormat('vi-VN').format(rawValue);
+        this.value = formattedValue;
+
+        let num = parseInt(rawValue);
+        if (num >= 1000000) {
+            let trieu = (num / 1000000).toFixed(1).replace('.0', '');
+            docSoText.innerText = `👉 ${trieu} triệu đồng`;
+        } else if (num >= 1000) {
+            let nghin = (num / 1000).toFixed(0);
+            docSoText.innerText = `👉 ${nghin} nghìn đồng`;
+        } else {
+            docSoText.innerText = '';
+        }
+    });
+
+    form.addEventListener('submit', function(e) {
+        let rawValue = giaInput.value.replace(/\./g, ''); 
+        giaInput.value = rawValue; 
+    });
+</script>
+{% endblock %}

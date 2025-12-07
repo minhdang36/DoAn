@@ -1,163 +1,219 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ phong.ten }} - Trọ Sinh Viên</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
+{% extends "layout.html" %}
 
-    <header>
-        <div class="header-top">
-            <div class="page-title">Trọ Sinh Viên</div>
-            <div class="header-actions">
-                {% if current_user.is_authenticated %}
-                    <span class="user-hello">Hi, {{ current_user.full_name }}</span>
-                    {% if current_user.role == 'student' %}
-                        <a href="/lich-su" class="btn-header">Lịch sử</a>
-                    {% endif %}
-                    {% if current_user.role == 'landlord' or current_user.role == 'admin' %}
-                        <a href="/quanlytin" class="btn-header" style="background-color: #f39c12; color: white;">Quản lý</a>
-                    {% endif %}
-                    <a href="/profile" class="btn-header">Hồ sơ</a>
-                    <a href="/logout" class="btn-header" style="background-color: #7f8c8d; color: white;">Thoát</a>
-                {% else %}
-                    <a href="/login" class="btn-header">Đăng Nhập</a>
-                {% endif %}
-            </div>
-        </div>
-    </header>
+{% block content %}
+<div class="container py-5">
+    
+    <div class="mb-4">
+        <a href="/" class="text-decoration-none text-secondary fw-bold">
+            <i class="fa-solid fa-arrow-left me-2"></i> Quay lại danh sách
+        </a>
+    </div>
 
-    <main class="detail-container">
-        <a href="/" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Quay lại danh sách</a>
-
-        <div class="detail-layout">
+    <div class="row g-4">
+        
+        <div class="col-lg-8">
             
-            <div class="detail-left">
+            <div id="roomCarousel" class="carousel slide mb-4 rounded-4 overflow-hidden shadow-sm position-relative" data-bs-ride="carousel">
                 
-                <div class="detail-image">
-                    <img src="/static/images/{{ phong.anh }}" alt="Ảnh phòng trọ">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#roomCarousel" data-bs-slide-to="0" class="active"></button>
+                    {% for img in ds_anh %}
+                        <button type="button" data-bs-target="#roomCarousel" data-bs-slide-to="{{ loop.index }}"></button>
+                    {% endfor %}
+                </div>
+
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="/static/images/{{ phong.anh }}" class="d-block w-100" style="height: 450px; object-fit: cover;" alt="Ảnh bìa">
+                    </div>
+                    
+                    {% for img in ds_anh %}
+                    <div class="carousel-item">
+                        <img src="/static/images/{{ img.ten_anh }}" class="d-block w-100" style="height: 450px; object-fit: cover;" alt="Ảnh chi tiết">
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle p-3 bg-opacity-50" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle p-3 bg-opacity-50" aria-hidden="true"></span>
+                </button>
+
+                {% if current_user.is_authenticated and current_user.role == 'student' %}
+                <div class="position-absolute top-0 start-0 m-3 z-3">
+                    <a href="/luu-tin/{{ phong.id }}" class="btn btn-light rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;" title="Lưu tin này">
+                        {% if da_luu %}
+                            <i class="fa-solid fa-heart text-danger fs-4"></i>
+                        {% else %}
+                            <i class="fa-regular fa-heart text-danger fs-4"></i>
+                        {% endif %}
+                    </a>
+                </div>
+                {% endif %}
+
+                <div class="position-absolute top-0 end-0 m-3 z-3">
                     {% if phong.status == 'da_thue' %}
-                        <div class="overlay-status">ĐÃ HẾT PHÒNG</div>
+                        <span class="badge bg-danger fs-6 py-2 px-3 shadow">🚫 Đã Hết Phòng</span>
+                    {% else %}
+                        <span class="badge bg-success fs-6 py-2 px-3 shadow">✅ Còn Phòng</span>
                     {% endif %}
                 </div>
+                
+                <div class="position-absolute bottom-0 start-0 m-3 z-3">
+                    <span class="badge bg-white text-dark shadow-sm py-2 px-3">
+                        <i class="fa-solid fa-tag text-primary me-1"></i> {{ phong.loai_phong or 'Phòng trọ' }}
+                    </span>
+                </div>
+            </div>
 
-                <div class="info-section">
-                    <div class="room-header">
-                        <h1 class="room-title">{{ phong.ten }}</h1>
-                        {% if phong.status == 'da_thue' %}
-                            <span class="badge-status het-phong">🚫 Đã cho thuê</span>
-                        {% else %}
-                            <span class="badge-status con-phong">✅ Còn phòng</span>
-                        {% endif %}
-                    </div>
-
-                    <div class="room-meta">
-                        <span class="room-price">{{ "{:,.0f}".format(phong.gia|float).replace(",", ".") }} VNĐ/tháng</span>
-                    </div>
-                    
-                    <p class="room-address"><i class="fa-solid fa-location-dot" style="color: #e74c3c;"></i> {{ phong.dia_chi }}</p>
-                    
-                    <hr>
-                    
-                    <h3>Mô tả chi tiết</h3>
-                    <div class="room-desc">
-                        {{ phong.mo_ta }}
-                    </div>
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <h2 class="fw-bold text-dark mb-2">{{ phong.ten }}</h2>
+                
+                <div class="d-flex align-items-center text-primary fw-bold fs-3 mb-4">
+                    {{ "{:,.0f}".format(phong.gia|float).replace(",", ".") }} <span class="fs-6 text-muted ms-1">VNĐ/tháng</span>
                 </div>
 
-                <div class="comment-section">
-                    <h3>💬 Đánh giá & Bình luận</h3>
-                    
-                    {% if current_user.is_authenticated and current_user.role == 'student' %}
-                    <form action="/gui_binh_luan/{{ phong.id }}" method="POST" class="comment-form">
-                        <div class="form-row">
-                            <label><i class="fa-solid fa-star" style="color: #f1c40f;"></i> Đánh giá:</label>
-                            <select name="rating" class="rating-select">
-                                <option value="5">5 Sao - Tuyệt vời</option>
-                                <option value="4">4 Sao - Tốt</option>
-                                <option value="3">3 Sao - Bình thường</option>
-                                <option value="2">2 Sao - Tệ</option>
-                                <option value="1">1 Sao - Rất tệ</option>
+                <div class="d-flex flex-wrap gap-4 mb-4 text-secondary fw-bold">
+                    <span><i class="fa-solid fa-ruler-combined me-2 text-info"></i>{{ phong.dien_tich or '??' }} m²</span>
+                    <span><i class="fa-solid fa-location-dot me-2 text-danger"></i>{{ phong.dia_chi }}</span>
+                    <span><i class="fa-regular fa-clock me-2 text-warning"></i>{{ phong.created_at or 'Mới đăng' }}</span>
+                </div>
+
+                <hr class="text-muted opacity-25">
+
+                <h5 class="fw-bold mt-4 mb-3">Tiện ích phòng</h5>
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    {% for ti in tien_ich %}
+                        <span class="badge bg-light text-dark border p-2 px-3 rounded-pill fw-normal">
+                            <i class="fa-solid {{ ti.icon }} me-2 text-primary"></i>{{ ti.ten_tien_ich }}
+                        </span>
+                    {% else %}
+                        <p class="text-muted small fst-italic">Chưa cập nhật tiện ích.</p>
+                    {% endfor %}
+                </div>
+
+                <hr class="text-muted opacity-25">
+
+                <h5 class="fw-bold mt-4 mb-3">Mô tả chi tiết</h5>
+                <p class="text-secondary" style="line-height: 1.8; white-space: pre-line;">
+                    {{ phong.mo_ta }}
+                </p>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h4 class="fw-bold mb-4">💬 Đánh giá từ sinh viên</h4>
+
+                {% if current_user.is_authenticated and current_user.role == 'student' %}
+                <div class="bg-light p-4 rounded-4 mb-4">
+                    <form action="/gui_binh_luan/{{ phong.id }}" method="POST">
+                        <div class="mb-3 d-flex align-items-center gap-3">
+                            <label class="fw-bold text-dark">Đánh giá của bạn:</label>
+                            <select name="rating" class="form-select form-select-sm w-auto border-0 shadow-none text-warning fw-bold bg-white">
+                                <option value="5">⭐⭐⭐⭐⭐ (Tuyệt vời)</option>
+                                <option value="4">⭐⭐⭐⭐ (Tốt)</option>
+                                <option value="3">⭐⭐⭐ (Bình thường)</option>
+                                <option value="2">⭐⭐ (Tệ)</option>
+                                <option value="1">⭐ (Rất tệ)</option>
                             </select>
                         </div>
-                        <textarea name="noi_dung" rows="3" class="comment-input" placeholder="Chia sẻ trải nghiệm thực tế của bạn về phòng này..." required></textarea>
-                        <button type="submit" class="btn-submit-comment">Gửi Đánh Giá</button>
-                    </form>
-                    {% endif %}
-
-                    <div class="comment-list">
-                        {% for bl in binh_luan %}
-                        <div class="comment-item">
-                            <div class="comment-avatar">{{ bl.full_name[0] }}</div>
-                            <div class="comment-content">
-                                <div class="comment-header">
-                                    <strong>{{ bl.full_name }}</strong>
-                                    <div class="stars">
-                                        {% for i in range(bl.rating) %}<i class="fa-solid fa-star"></i>{% endfor %}
-                                    </div>
-                                </div>
-                                <p>{{ bl.noi_dung }}</p>
-                                <small class="comment-date">{{ bl.created_at }}</small>
-                            </div>
+                        <div class="d-flex gap-3">
+                            <img src="https://ui-avatars.com/api/?name={{ current_user.full_name }}&background=random" class="rounded-circle shadow-sm" width="50" height="50">
+                            <textarea name="noi_dung" class="form-control rounded-4 border-0 shadow-sm" rows="3" placeholder="Chia sẻ trải nghiệm thực tế của bạn về phòng trọ này..." required></textarea>
                         </div>
-                        {% else %}
-                            <p class="no-comment">Chưa có đánh giá nào. Hãy là người đầu tiên!</p>
-                        {% endfor %}
+                        <div class="text-end mt-3">
+                            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">Gửi đánh giá</button>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+
+                <div class="comments-list">
+                    {% for bl in binh_luan %}
+                    <div class="d-flex gap-3 mb-4 pb-4 border-bottom border-light last-no-border">
+                        <img src="https://ui-avatars.com/api/?name={{ bl.full_name }}&background=random" class="rounded-circle shadow-sm" width="50" height="50">
+                        <div>
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <h6 class="fw-bold mb-0 text-dark">{{ bl.full_name }}</h6>
+                                <span class="text-warning small">
+                                    {% for i in range(bl.rating) %}<i class="fa-solid fa-star"></i>{% endfor %}
+                                </span>
+                            </div>
+                            <p class="text-secondary mb-1">{{ bl.noi_dung }}</p>
+                            <small class="text-muted" style="font-size: 12px;">{{ bl.created_at }}</small>
+                        </div>
                     </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <img src="https://cdn-icons-png.flaticon.com/512/1380/1380338.png" width="60" class="mb-3 opacity-50">
+                            <p class="text-muted">Chưa có đánh giá nào. Hãy là người đầu tiên!</p>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
+        </div>
 
-            <div class="detail-right">
-                <div class="owner-card">
-                    <h3>Thông tin chủ trọ</h3>
-                    <div class="owner-profile">
-                        <div class="owner-avatar-img">👤</div>
-                        <div class="owner-text">
-                            <strong>{{ phong.full_name }}</strong>
-                            <p>Chủ nhà uy tín</p>
-                        </div>
+        <div class="col-lg-4">
+            <div class="card border-0 shadow rounded-4 p-4 sticky-top" style="top: 90px; z-index: 1;">
+                
+                <div class="text-center mb-4">
+                    <div class="position-relative d-inline-block mb-3">
+                        <img src="https://ui-avatars.com/api/?name={{ phong.full_name }}&size=100&background=0D6EFD&color=fff" class="rounded-circle border border-4 border-white shadow">
+                        <span class="position-absolute bottom-0 end-0 bg-success border border-4 border-white rounded-circle p-2"></span>
                     </div>
+                    <h5 class="fw-bold mb-1">{{ phong.full_name }}</h5>
+                    <div class="badge bg-light text-secondary border rounded-pill px-3">Chủ nhà uy tín</div>
+                </div>
 
+                <div class="d-grid gap-2 mb-4">
                     {% if phong.phone %}
-                        <div class="contact-buttons">
-                            <a href="tel:{{ phong.phone }}" class="btn-contact call">
-                                <i class="fa-solid fa-phone"></i> Gọi điện
-                            </a>
-                            <a href="https://zalo.me/{{ phong.phone }}" target="_blank" class="btn-contact zalo">
-                                <i class="fa-solid fa-comment"></i> Zalo
-                            </a>
-                        </div>
+                        <a href="tel:{{ phong.phone }}" class="btn btn-success rounded-pill py-2 fw-bold shadow-sm">
+                            <i class="fa-solid fa-phone me-2"></i> {{ phong.phone }}
+                        </a>
+                        <a href="https://zalo.me/{{ phong.phone }}" target="_blank" class="btn btn-primary rounded-pill py-2 fw-bold shadow-sm" style="background-color: #0068ff; border: none;">
+                            <i class="fa-solid fa-comment-dots me-2"></i> Chat Zalo
+                        </a>
+                    {% else %}
+                        <button class="btn btn-secondary rounded-pill" disabled>Chưa có SĐT</button>
                     {% endif %}
+                </div>
 
-                    <hr>
+                <hr class="text-muted opacity-25">
 
-                    {% if phong.status != 'da_thue' %}
-                        {% if current_user.is_authenticated and current_user.role == 'student' %}
-                            <h4>Nhắn tin cho chủ nhà</h4>
+                {% if phong.status == 'da_thue' %}
+                    <div class="alert alert-danger text-center rounded-4 mb-0 border-0 bg-danger bg-opacity-10 text-danger fw-bold">
+                        <i class="fa-solid fa-circle-exclamation fs-4 mb-2 d-block"></i>
+                        Rất tiếc! Phòng này đã được thuê.
+                    </div>
+                {% else %}
+                    <h6 class="fw-bold mb-3 text-dark"><i class="fa-regular fa-paper-plane me-2 text-primary"></i>Nhắn tin hẹn xem phòng</h6>
+                    
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.role == 'student' %}
                             <form action="/gui_lien_he/{{ phong.id }}" method="POST">
-                                <textarea name="message" rows="4" class="msg-input" placeholder="Ví dụ: Em muốn hẹn xem phòng vào 5h chiều nay..." required></textarea>
-                                <button type="submit" class="btn-contact send">
-                                    <i class="fa-regular fa-paper-plane"></i> Gửi yêu cầu
-                                </button>
+                                <textarea name="message" class="form-control bg-light border-0 rounded-4 mb-3 p-3" rows="4" placeholder="Ví dụ: Em muốn hẹn xem phòng vào 5h chiều nay..." required></textarea>
+                                <button type="submit" class="btn btn-dark w-100 rounded-pill fw-bold py-2 shadow-sm">Gửi yêu cầu</button>
                             </form>
-                        {% elif not current_user.is_authenticated %}
-                            <div class="login-prompt">
-                                <p>Bạn muốn thuê phòng này?</p>
-                                <a href="/login" class="btn-contact login">Đăng nhập để liên hệ</a>
+                        {% elif current_user.id == phong.user_id %}
+                            <div class="alert alert-info text-center small rounded-3">
+                                Đây là bài đăng của bạn.
                             </div>
+                            <a href="/quanlytin" class="btn btn-outline-dark w-100 rounded-pill fw-bold">Quản lý bài viết</a>
+                        {% else %}
+                            <p class="text-center text-muted small bg-light p-2 rounded-3">Bạn đang đăng nhập với tư cách Quản trị viên.</p>
                         {% endif %}
                     {% else %}
-                        <div class="alert-box">
-                            ⚠️ Phòng này đã hết.
+                        <div class="text-center">
+                            <p class="small text-muted mb-3">Đăng nhập để gửi tin nhắn trực tiếp cho chủ nhà.</p>
+                            <a href="/login" class="btn btn-outline-primary w-100 rounded-pill fw-bold">Đăng nhập ngay</a>
                         </div>
                     {% endif %}
-                </div>
-            </div>
+                {% endif %}
 
+            </div>
         </div>
-    </main>
-</body>
-</html>
+
+    </div>
+</div>
+{% endblock %}

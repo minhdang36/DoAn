@@ -1,61 +1,78 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <style>
-        .admin-container { display: flex; min-height: 100vh; }
-        .sidebar-admin { width: 250px; background: #2c3e50; color: white; padding: 20px; }
-        .sidebar-admin a { display: block; color: white; padding: 10px; text-decoration: none; border-bottom: 1px solid #34495e; }
-        .sidebar-admin a:hover { background: #34495e; }
-        .content-admin { flex: 1; padding: 20px; background: #f4f6f6; }
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4">
         
-        /* Card thống kê */
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
-        .stat-number { font-size: 2em; font-weight: bold; color: #e67e22; }
-    </style>
-</head>
-<body>
-    <div class="admin-container">
-        <div class="sidebar-admin">
-            <h3>👮 ADMIN PANEL</h3>
-            <a href="/admin">📊 Thống kê chung</a>
-            <a href="/admin/users">👥 Quản lý người dùng</a>
-            <a href="/admin/posts">📝 Quản lý bài đăng</a>
-            <a href="/admin/backup">💾 Sao lưu dữ liệu</a>
-            <a href="/">🏠 Về trang chủ</a>
-            <a href="/logout">🚪 Đăng xuất</a>
+        <div class="col-lg-3">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="fw-bold text-primary mb-0"><i class="fa-solid fa-user-shield me-2"></i> Admin Panel</h5>
+                </div>
+                <div class="list-group list-group-flush rounded-bottom-4">
+                    <a href="/admin" class="list-group-item list-group-item-action active fw-bold border-0 py-3">
+                        <i class="fa-solid fa-chart-pie me-2"></i> Thống kê chung
+                    </a>
+                    <a href="/admin/users" class="list-group-item list-group-item-action border-0 py-3 text-secondary">
+                        <i class="fa-solid fa-users me-2"></i> Quản lý người dùng
+                    </a>
+                    <a href="/admin/posts" class="list-group-item list-group-item-action border-0 py-3 text-secondary">
+                        <i class="fa-solid fa-file-lines me-2"></i> Quản lý bài đăng
+                    </a>
+                    <a href="/admin/utilities" class="list-group-item list-group-item-action border-0 py-3 text-secondary">
+                        <i class="fa-solid fa-list-check me-2"></i> Quản lý tiện ích
+                    </a>
+                    
+                    <a href="/admin/backup" class="list-group-item list-group-item-action border-0 py-3 text-secondary">
+                        <i class="fa-solid fa-database me-2"></i> Sao lưu dữ liệu
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <div class="content-admin">
-            <h2>Tổng quan hệ thống</h2>
+        <div class="col-lg-9">
+            <h3 class="fw-bold mb-4 text-dark">Tổng Quan Hệ Thống</h3>
             
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number">{{ stats.sinh_vien }}</div>
-                    <div>Sinh viên</div>
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm rounded-4 text-center p-3 h-100 bg-primary bg-opacity-10">
+                        <div class="text-primary fs-1 mb-2"><i class="fa-solid fa-user-graduate"></i></div>
+                        <h2 class="fw-bold mb-0 text-primary">{{ stats.sinh_vien }}</h2>
+                        <small class="text-muted fw-bold">Sinh viên</small>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">{{ stats.chu_tro }}</div>
-                    <div>Chủ trọ</div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm rounded-4 text-center p-3 h-100 bg-success bg-opacity-10">
+                        <div class="text-success fs-1 mb-2"><i class="fa-solid fa-house-user"></i></div>
+                        <h2 class="fw-bold mb-0 text-success">{{ stats.chu_tro }}</h2>
+                        <small class="text-muted fw-bold">Chủ trọ</small>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">{{ stats.tong_bai }}</div>
-                    <div>Tổng bài đăng</div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm rounded-4 text-center p-3 h-100 bg-info bg-opacity-10">
+                        <div class="text-info fs-1 mb-2"><i class="fa-solid fa-layer-group"></i></div>
+                        <h2 class="fw-bold mb-0 text-info">{{ stats.tong_bai }}</h2>
+                        <small class="text-muted fw-bold">Tổng bài đăng</small>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number" style="color: red;">{{ stats.cho_duyet }}</div>
-                    <div>Bài chờ duyệt</div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm rounded-4 text-center p-3 h-100 bg-warning bg-opacity-10">
+                        <div class="text-warning fs-1 mb-2"><i class="fa-solid fa-hourglass-half"></i></div>
+                        <h2 class="fw-bold mb-0 text-warning">{{ stats.cho_duyet }}</h2>
+                        <small class="text-muted fw-bold">Chờ duyệt</small>
+                    </div>
                 </div>
             </div>
 
-            <div style="background: white; padding: 20px; border-radius: 8px;">
-                <h3>Chào mừng quản trị viên!</h3>
-                <p>Chọn chức năng ở menu bên trái để bắt đầu quản lý.</p>
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h5 class="fw-bold mb-3">Chào mừng quản trị viên!</h5>
+                <p class="text-secondary">Hệ thống đang hoạt động bình thường. Bạn có thể duyệt bài đăng mới hoặc quản lý tài khoản người dùng từ menu bên trái.</p>
+                <div class="alert alert-info rounded-3 mb-0">
+                    <i class="fa-solid fa-circle-info me-2"></i> <strong>Mẹo:</strong> Hãy thường xuyên sao lưu dữ liệu để đảm bảo an toàn.
+                </div>
             </div>
         </div>
+
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

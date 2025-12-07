@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-0">
+                <div class="card-header bg-white border-bottom p-3">
+                    <div class="d-flex align-items-center">
+                        <a href="javascript:history.back()" class="text-secondary me-3"><i class="fa-solid fa-arrow-left"></i></a>
+                        <div>
+                            <h6 class="fw-bold mb-0 text-primary">Phòng: {{ phong.ten }}</h6>
+                            <small class="text-muted">Chat với: {% if current_user.role == 'student' %} {{ chu_tro.full_name }} {% else %} {{ sinh_vien.full_name }} {% endif %}</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-body bg-light" style="height: 400px; overflow-y: auto; display: flex; flex-direction: column-reverse;">
+                    <div class="d-flex flex-column">
+                        {% for msg in ds_tin_nhan %}
+                            <div class="d-flex mb-3 {% if msg.sender_id == current_user.id %}justify-content-end{% else %}justify-content-start{% endif %}">
+                                <div class="p-3 rounded-4 shadow-sm" 
+                                     style="max-width: 75%; {% if msg.sender_id == current_user.id %}background-color: #0d6efd; color: white; border-bottom-right-radius: 0;{% else %}background-color: white; color: #333; border-bottom-left-radius: 0;{% endif %}">
+                                    <div>{{ msg.message }}</div>
+                                    <div class="text-end mt-1 opacity-75" style="font-size: 10px;">{{ msg.created_at }}</div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="card-footer bg-white p-3 border-0">
+                    <form action="/chat/{{ lien_he_id }}" method="POST" class="d-flex gap-2">
+                        <input type="text" name="message" class="form-control rounded-pill bg-light border-0 px-3" placeholder="Nhập tin nhắn..." required autocomplete="off">
+                        <button type="submit" class="btn btn-primary rounded-circle shadow-sm" style="width: 45px; height: 45px;"><i class="fa-solid fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

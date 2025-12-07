@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="fw-bold mb-4 text-danger"><i class="fa-solid fa-heart me-2"></i> Phòng Đã Lưu</h2>
+
+    {% if ds_yeu_thich %}
+    <div class="row g-4">
+        {% for phong in ds_yeu_thich %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover">
+                <div class="position-relative">
+                    <img src="/static/images/{{ phong.anh }}" class="card-img-top" style="height: 220px; object-fit: cover;">
+                    <a href="/luu-tin/{{ phong.id }}" class="position-absolute top-0 end-0 m-3 btn btn-light btn-sm rounded-circle shadow-sm text-danger" title="Bỏ lưu">
+                        <i class="fa-solid fa-xmark"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-truncate">{{ phong.ten }}</h5>
+                    <p class="text-primary fw-bold mb-1">{{ "{:,.0f}".format(phong.gia|float).replace(",", ".") }} đ/tháng</p>
+                    <small class="text-muted"><i class="fa-solid fa-location-dot"></i> {{ phong.dia_chi }}</small>
+                </div>
+                <div class="card-footer bg-white border-0 pb-3">
+                    <a href="/chitiet/{{ phong.id }}" class="btn btn-outline-danger w-100 rounded-pill">Xem lại</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fa-regular fa-heart fs-1 text-muted mb-3 opacity-50"></i>
+            <p class="text-muted">Bạn chưa lưu phòng nào cả.</p>
+            <a href="/" class="btn btn-primary rounded-pill">Tìm phòng ngay</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

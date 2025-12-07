@@ -1,78 +1,75 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Thông Tin Cá Nhân</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    <header>
-        <div class="logo">🏠 TimTroSinhVien.com</div>
-        <nav>
-            <a href="/">Trang chủ</a>
-            <a href="/logout">Đăng xuất</a>
-        </nav>
-    </header>
+{% extends "layout.html" %}
 
-    <main>
-        <div class="khung-dang-tin" style="max-width: 600px;">
-            <h2>Hồ sơ cá nhân</h2>
-            
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <p style="color: green; text-align: center; font-weight: bold;">{{ messages[0] }}</p>
-                {% endif %}
-            {% endwith %}
-
-            <form method="POST">
-                
-                <div class="nhom-input">
-                    <label>Tên đăng nhập (Không thể sửa):</label>
-                    <input type="text" value="{{ user_info.username }}" disabled style="background-color: #eee;">
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow rounded-4 p-4">
+                <div class="text-center mb-4">
+                    <img src="https://ui-avatars.com/api/?name={{ user_info.full_name }}&size=100&background=random" class="rounded-circle mb-3 shadow-sm">
+                    <h3 class="fw-bold">{{ user_info.full_name }}</h3>
+                    <span class="badge bg-secondary rounded-pill px-3">{{ user_info.role }}</span>
                 </div>
 
-                <div class="nhom-input">
-                    <label>Họ và Tên:</label>
-                    <input type="text" name="full_name" value="{{ user_info.full_name }}" required>
-                </div>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="alert alert-success rounded-3 text-center" role="alert">
+                            {{ messages[0] }}
+                        </div>
+                    {% endif %}
+                {% endwith %}
 
-                {% if user_info.role == 'student' %}
-                <div class="hang-ngang">
-                    <div class="nhom-input">
-                        <label>Ngày sinh:</label>
-                        <input type="date" name="dob" value="{{ user_info.dob }}">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-muted">Tên đăng nhập</label>
+                        <input type="text" value="{{ user_info.username }}" class="form-control-plaintext fw-bold ps-3" readonly>
                     </div>
-                    <div class="nhom-input">
-                        <label>Giới tính:</label>
-                        <select name="gender" style="width: 100%; padding: 10px;">
-                            <option value="Nam" {% if user_info.gender == 'Nam' %}selected{% endif %}>Nam</option>
-                            <option value="Nữ" {% if user_info.gender == 'Nữ' %}selected{% endif %}>Nữ</option>
-                            <option value="Khác" {% if user_info.gender == 'Khác' %}selected{% endif %}>Khác</option>
-                        </select>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Họ và Tên</label>
+                        <input type="text" name="full_name" value="{{ user_info.full_name }}" class="form-control bg-light border-0 rounded-3" required>
                     </div>
-                </div>
-                {% endif %}
 
-                {% if user_info.role == 'landlord' %}
-                <div class="nhom-input">
-                    <label>Số Căn cước công dân (CCCD):</label>
-                    <input type="text" name="cccd" value="{{ user_info.cccd or '' }}" placeholder="Nhập số CCCD...">
-                </div>
-                {% endif %}
+                    {% if user_info.role == 'student' %}
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-bold">Ngày sinh</label>
+                            <input type="date" name="dob" value="{{ user_info.dob }}" class="form-control bg-light border-0 rounded-3">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-bold">Giới tính</label>
+                            <select name="gender" class="form-select bg-light border-0 rounded-3">
+                                <option value="Nam" {% if user_info.gender == 'Nam' %}selected{% endif %}>Nam</option>
+                                <option value="Nữ" {% if user_info.gender == 'Nữ' %}selected{% endif %}>Nữ</option>
+                                <option value="Khác" {% if user_info.gender == 'Khác' %}selected{% endif %}>Khác</option>
+                            </select>
+                        </div>
+                    </div>
+                    {% endif %}
 
-                <div class="nhom-input">
-                    <label>Số điện thoại:</label>
-                    <input type="text" name="phone" value="{{ user_info.phone or '' }}" placeholder="Nhập SĐT..." required>
-                </div>
+                    {% if user_info.role == 'landlord' %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Số CCCD</label>
+                        <input type="text" name="cccd" value="{{ user_info.cccd or '' }}" class="form-control bg-light border-0 rounded-3" placeholder="Nhập số CCCD">
+                    </div>
+                    {% endif %}
 
-                <div class="nhom-input">
-                    <label>Email:</label>
-                    <input type="email" name="email" value="{{ user_info.email or '' }}" placeholder="Nhập Email..." required>
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Email</label>
+                        <input type="email" name="email" value="{{ user_info.email or '' }}" class="form-control bg-light border-0 rounded-3" required>
+                    </div>
 
-                <button type="submit" class="nut-dang-tin" style="background-color: #2980b9;">Lưu Thay Đổi</button>
-            </form>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Số điện thoại</label>
+                        <input type="text" name="phone" value="{{ user_info.phone or '' }}" class="form-control bg-light border-0 rounded-3" required maxlength="10">
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary rounded-pill py-2 fw-bold">Lưu Thay Đổi</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </main>
-</body>
-</html>
+    </div>
+</div>
+{% endblock %}

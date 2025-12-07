@@ -1,41 +1,46 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Đăng Ký Tài Khoản</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    <header>
-        <div class="logo">🏠 TimTroSinhVien.com</div>
-        <nav><a href="/">Trang chủ</a></nav>
-    </header>
-    <main>
-        <div class="khung-dang-tin" style="max-width: 400px;">
-            <h2>Đăng Ký Tài Khoản Mới</h2>
-            <form action="/register" method="POST">
-                <div class="nhom-input">
-                    <label>Bạn là ai?</label>
-                    <select name="role" style="width: 100%; padding: 10px;">
-                        <option value="student">Sinh viên (Tìm trọ)</option>
-                        <option value="landlord">Chủ trọ (Đăng tin)</option>
-                    </select>
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow rounded-4 p-4">
+                <h3 class="text-center fw-bold text-primary mb-4">Tạo Tài Khoản Mới</h3>
+                
+                <form action="/register" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Bạn là ai?</label>
+                        <select name="role" class="form-select rounded-pill bg-light border-0">
+                            <option value="student">Sinh viên (Tìm trọ)</option>
+                            <option value="landlord">Chủ trọ (Đăng tin)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Họ và tên</label>
+                        <input type="text" name="full_name" class="form-control rounded-pill bg-light border-0" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tên đăng nhập</label>
+                        <input type="text" name="username" class="form-control rounded-pill bg-light border-0" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Mật khẩu</label>
+                        <input type="password" name="password" class="form-control rounded-pill bg-light border-0" required>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary rounded-pill py-2 fw-bold">Đăng Ký Tài Khoản</button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-3">
+                    <a href="/login" class="text-decoration-none small text-secondary">Đã có tài khoản? Đăng nhập</a>
                 </div>
-                <div class="nhom-input">
-                    <label>Họ và tên:</label>
-                    <input type="text" name="full_name" required>
-                </div>
-                <div class="nhom-input">
-                    <label>Tên đăng nhập:</label>
-                    <input type="text" name="username" required>
-                </div>
-                <div class="nhom-input">
-                    <label>Mật khẩu:</label>
-                    <input type="password" name="password" required>
-                </div>
-                <button type="submit" class="nut-dang-tin">Đăng Ký</button>
-            </form>
+            </div>
         </div>
-    </main>
-</body>
-</html>
+    </div>
+</div>
+{% endblock %}

@@ -1,82 +1,88 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Quản Lý Tin Đăng</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <link rel="stylesheet" href="/static/quanlytin.css">
-</head>
-<body>
-    <header>
-        <div class="logo">🏠 TimTroSinhVien.com</div>
-        <nav>
-            <a href="/">Trang chủ</a>
-            <a href="/dangtin">Đăng tin mới</a>
-            <span style="color: white; margin-left: 15px;">Xin chào, {{ user.full_name }}</span>
-            <a href="/logout">Đăng xuất</a>
-        </nav>
-    </header>
+{% extends "layout.html" %}
 
-    <main>
-        <h2>Quản lý danh sách bài đăng</h2>
-        
-        {% if danh_sach_cua_toi %}
-            <table class="bang-quan-ly">
-                <thead>
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark">📂 Quản Lý Tin Đăng</h2>
+        <a href="/dangtin" class="btn btn-success rounded-pill px-4 shadow-sm">
+            <i class="fa-solid fa-plus"></i> Đăng tin mới
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
                     <tr>
-                        <th style="width: 100px;">Ảnh</th>
-                        <th>Thông tin phòng</th>
-                        <th>Giá & Trạng thái</th>
-                        <th>Khách quan tâm</th>
-                        <th style="width: 180px;">Hành động</th>
+                        <th class="py-3 ps-4">Phòng trọ</th>
+                        <th class="py-3">Giá & Trạng thái</th>
+                        <th class="py-3 text-center">Tương tác</th>
+                        <th class="py-3 text-end pe-4">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for phong in danh_sach_cua_toi %}
-                    <tr>
-                        <td><img src="/static/images/{{ phong.anh }}" width="100%" style="border-radius: 4px;"></td>
-                        <td>
-                            <strong>{{ phong.ten }}</strong><br>
-                            <small>📍 {{ phong.dia_chi }}</small>
-                        </td>
-                        <td>
-                            {% if phong.is_approved == 1 %}
-                                <div style="margin-bottom: 5px;"><small>Admin:</small> <span class="trang-thai-duyet">✅ Đã duyệt</span></div>
-                            {% else %}
-                                <div style="margin-bottom: 5px;"><small>Admin:</small> <span class="trang-thai-cho">⏳ Chờ duyệt</span></div>
-                            {% endif %}
-
-                            {% if phong.status == 'con_phong' %}
-                                <a href="/doi-trang-thai/{{ phong.id }}" style="color: white; background: #27ae60; padding: 3px 8px; border-radius: 4px; text-decoration: none; font-size: 12px;">
-                                    🏠 Còn phòng (Bấm để đóng)
-                                </a>
-                            {% else %}
-                                <a href="/doi-trang-thai/{{ phong.id }}" style="color: white; background: #7f8c8d; padding: 3px 8px; border-radius: 4px; text-decoration: none; font-size: 12px;">
-                                    🔒 Đã cho thuê (Bấm mở lại)
-                                </a>
-                            {% endif %}
-                        </td>
-                        
-                        <td style="text-align: center;">
-                            {% if phong.so_luot_lien_he > 0 %}
-                                <span style="font-size: 1.2em; font-weight: bold; color: blue;">{{ phong.so_luot_lien_he }}</span> yêu cầu<br>
-                                <a href="/xem-lien-he/{{ phong.id }}" style="color: blue; text-decoration: underline; font-size: 0.9em;">Xem danh sách</a>
-                            {% else %}
-                                <span style="color: #999;">Chưa có</span>
-                            {% endif %}
-                        </td>
-                        
-                        <td>
-                            <a href="/suatin/{{ phong.id }}" class="btn-sua">✏️ Sửa</a>
-                            <a href="/xoatin/{{ phong.id }}" class="btn-xoa" onclick="return confirm('Xóa bài này?')">🗑️ Xóa</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
+                    {% if danh_sach_cua_toi %}
+                        {% for phong in danh_sach_cua_toi %}
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <img src="/static/images/{{ phong.anh }}" class="rounded-3 me-3" width="80" height="60" style="object-fit: cover;">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold text-dark">{{ phong.ten }}</h6>
+                                        <small class="text-muted"><i class="fa-solid fa-location-dot"></i> {{ phong.dia_chi }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="fw-bold text-primary">{{ "{:,.0f}".format(phong.gia|float).replace(",", ".") }} đ</div>
+                                <div class="mt-1">
+                                    {% if phong.is_approved == 1 %}
+                                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill">Đã duyệt</span>
+                                    {% else %}
+                                        <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill">Chờ duyệt</span>
+                                    {% endif %}
+                                    
+                                    {% if phong.status == 'da_thue' %}
+                                        <span class="badge bg-danger rounded-pill">Đã thuê</span>
+                                    {% else %}
+                                        <span class="badge bg-info bg-opacity-10 text-info rounded-pill">Còn phòng</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                {% if phong.so_luot_lien_he > 0 %}
+                                    <span class="fw-bold text-primary fs-5">{{ phong.so_luot_lien_he }}</span><br>
+                                    <a href="/xem-lien-he/{{ phong.id }}" class="small text-decoration-none fw-bold">Xem yêu cầu</a>
+                                {% else %}
+                                    <span class="text-muted small">Chưa có</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="btn-group">
+                                    <a href="/doi-trang-thai/{{ phong.id }}" class="btn btn-sm btn-outline-secondary" title="Đổi trạng thái">
+                                        <i class="fa-solid fa-repeat"></i>
+                                    </a>
+                                    <a href="/suatin/{{ phong.id }}" class="btn btn-sm btn-outline-primary" title="Sửa">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+                                    <a href="/xoatin/{{ phong.id }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa bài này?')" title="Xóa">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center py-5 text-muted">
+                                <i class="fa-regular fa-folder-open fs-1 mb-3"></i>
+                                <p>Bạn chưa có bài đăng nào.</p>
+                            </td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
-        {% else %}
-            <p style="text-align: center;">Bạn chưa có bài đăng nào. <a href="/dangtin">Đăng ngay!</a></p>
-        {% endif %}
-    </main>
-</body>
-</html>
+        </div>
+    </div>
+</div>
+{% endblock %}

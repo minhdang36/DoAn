@@ -1,138 +1,113 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trọ Sinh Viên</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
+{% extends "layout.html" %}
 
-    <header>
-        <div class="header-top">
-            <div class="page-title">Trọ Sinh Viên</div>
+{% block content %}
 
-            <div class="header-actions">
-                {% if current_user.is_authenticated %}
-                    <span class="user-hello">Hi, {{ current_user.full_name }}</span>
-                    
-                    {% if current_user.role == 'landlord' or current_user.role == 'admin' %}
-                        <a href="/quanlytin" class="btn-header" style="background-color: #f39c12; color: white;">
-                            <i class="fa-solid fa-list-check"></i> Quản lý
-                        </a>
-                        <a href="/dangtin" class="btn-header" style="background-color: #27ae60; color: white;">
-                            <i class="fa-solid fa-plus"></i> Đăng Tin
-                        </a>
-                    {% endif %}
-
-                    {% if current_user.role == 'admin' %}
-                        <a href="/admin" class="btn-header" style="background-color: #c0392b; color: white;">Admin</a>
-                    {% endif %}
-
-                    {% if current_user.role == 'student' %}
-                        <a href="/lich-su" class="btn-header">Lịch sử</a>
-                    {% endif %}
-
-                    <a href="/profile" class="btn-header">Hồ sơ</a>
-                    <a href="/logout" class="btn-header" style="background-color: #7f8c8d; color: white;">Thoát</a>
-
-                {% else %}
-                    <a href="/login" class="btn-header">Đăng Nhập</a>
-                    <a href="/register" class="btn-header" style="background-color: #333; color: white;">Đăng Ký</a>
-                {% endif %}
-            </div>
+<section class="hero-section text-center text-white d-flex align-items-center justify-content-center" 
+    style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); height: 400px; background-size: cover; background-position: center;">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">Tìm Phòng Trọ Ưng Ý Ngay Hôm Nay</h1>
+        <p class="lead mb-4">Hàng ngàn phòng trọ giá rẻ, an ninh dành cho sinh viên.</p>
+        
+        <div class="search-bar bg-white p-2 rounded-pill shadow-lg d-inline-block w-100" style="max-width: 700px;">
+            <form action="/" method="GET" class="d-flex">
+                <input type="text" name="tu_khoa" class="form-control border-0 rounded-pill px-4 shadow-none" 
+                       placeholder="Nhập tên đường, quận, trường học..." value="{{ request.args.get('tu_khoa', '') }}">
+                <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">
+                    <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm
+                </button>
+            </form>
         </div>
+    </div>
+</section>
 
-        <form action="/" method="GET" class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" name="tu_khoa" placeholder="Tìm theo tên đường, quận, giá..." value="{{ request.args.get('tu_khoa', '') }}">
-            <button type="submit">Tìm kiếm</button>
-        </form>
-    </header>
-
-    <main>
-        <section class="filter-section">
-            <form action="/" method="GET" class="filter-row">
-                
-                <input type="hidden" name="tu_khoa" value="{{ request.args.get('tu_khoa', '') }}">
-
-                <div class="filter-item">
-                    <i class="fa-solid fa-location-dot"></i>
-                    <select name="vi_tri" onchange="this.form.submit()">
-                        <option value="">-- Chọn Vị Trí --</option>
+<div class="container mt-5">
+    
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm p-3 rounded-4">
+                <form action="/" method="GET" class="d-flex flex-wrap gap-3 align-items-center">
+                    <span class="fw-bold text-secondary"><i class="fa-solid fa-filter"></i> Bộ lọc:</span>
+                    
+                    <select name="vi_tri" class="form-select form-select-sm rounded-pill w-auto border-light bg-light" onchange="this.form.submit()">
+                        <option value="">📍 Tất cả vị trí</option>
                         <option value="Hà Nội" {% if request.args.get('vi_tri') == 'Hà Nội' %}selected{% endif %}>Hà Nội</option>
                         <option value="Nam Định" {% if request.args.get('vi_tri') == 'Nam Định' %}selected{% endif %}>Nam Định</option>
                     </select>
-                </div>
 
-                <div class="filter-item">
-                    <i class="fa-solid fa-money-bill-wave"></i>
-                    <select name="muc_gia" onchange="this.form.submit()">
-                        <option value="">-- Mức Giá --</option>
+                    <select name="muc_gia" class="form-select form-select-sm rounded-pill w-auto border-light bg-light" onchange="this.form.submit()">
+                        <option value="">💰 Tất cả mức giá</option>
                         <option value="0-1000000" {% if request.args.get('muc_gia') == '0-1000000' %}selected{% endif %}>Dưới 1 triệu</option>
-                        <option value="1000000-2000000" {% if request.args.get('muc_gia') == '1000000-2000000' %}selected{% endif %}>1tr - 2tr</option>
-                        <option value="2000000-3000000" {% if request.args.get('muc_gia') == '2000000-3000000' %}selected{% endif %}>2tr - 3tr</option>
-                        <option value="3000000-4000000" {% if request.args.get('muc_gia') == '3000000-4000000' %}selected{% endif %}>3tr - 4tr</option>
+                        <option value="1000000-3000000" {% if request.args.get('muc_gia') == '1000000-3000000' %}selected{% endif %}>1tr - 3tr</option>
+                        <option value="3000000-5000000" {% if request.args.get('muc_gia') == '3000000-5000000' %}selected{% endif %}>3tr - 5tr</option>
                         <option value="5000000-99999999" {% if request.args.get('muc_gia') == '5000000-99999999' %}selected{% endif %}>Trên 5tr</option>
                     </select>
-                </div>
 
-                <div class="filter-item">
-                    <i class="fa-solid fa-house"></i>
-                    <select name="loai_phong" onchange="this.form.submit()">
-                        <option value="">-- Loại Phòng --</option>
+                    <select name="loai_phong" class="form-select form-select-sm rounded-pill w-auto border-light bg-light" onchange="this.form.submit()">
+                        <option value="">🏠 Tất cả loại phòng</option>
                         <option value="Khép kín" {% if request.args.get('loai_phong') == 'Khép kín' %}selected{% endif %}>Khép kín</option>
-                        <option value="Chung cư" {% if request.args.get('loai_phong') == 'Chung cư' %}selected{% endif %}>Chung cư</option>
-                        <option value="Trọ" {% if request.args.get('loai_phong') == 'Trọ' %}selected{% endif %}>Phòng trọ thường</option>
+                        <option value="Chung cư" {% if request.args.get('loai_phong') == 'Chung cư' %}selected{% endif %}>Chung cư mini</option>
+                        <option value="Trọ" {% if request.args.get('loai_phong') == 'Trọ' %}selected{% endif %}>Trọ giá rẻ</option>
+                        <option value="Nguyên căn" {% if request.args.get('loai_phong') == 'Nguyên căn' %}selected{% endif %}>Nguyên căn</option>
+                        <option value="KTX" {% if request.args.get('loai_phong') == 'KTX' %}selected{% endif %}>KTX</option>
                     </select>
-                </div>
 
-                {% if request.args.get('vi_tri') or request.args.get('muc_gia') or request.args.get('loai_phong') %}
-                    <a href="/" class="btn-clear-filter">❌ Xóa lọc</a>
-                {% endif %}
-            </form>
-        </section>
+                    {% if request.args.get('vi_tri') or request.args.get('muc_gia') or request.args.get('loai_phong') %}
+                        <a href="/" class="text-danger text-decoration-none small ms-auto fw-bold">❌ Xóa lọc</a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
 
-        <section class="room-list">
-            
-            {% if request.args.get('tu_khoa') %}
-                <p class="sub-title">Kết quả tìm kiếm cho: "{{ request.args.get('tu_khoa') }}"</p>
-            {% else %}
-                <p class="sub-title">Danh sách phòng trọ nổi bật</p>
-            {% endif %}
-
-            {% if danh_sach %}
-                {% for phong in danh_sach %}
-                <div class="room-card">
-                    
-                    <div class="card-img">
-                        <img src="/static/images/{{ phong.anh }}" alt="Ảnh phòng">
-                    </div>
-                    
-                    <div class="card-info">
-                        <h4>{{ phong.ten }}</h4>
-                        
+    <h3 class="fw-bold mb-4 ps-2 border-start border-4 border-primary">Phòng Trọ Nổi Bật</h3>
+    
+    <div class="row g-4">
+        {% if danh_sach %}
+            {% for phong in danh_sach %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover">
+                    <div class="position-relative">
+                        <img src="/static/images/{{ phong.anh }}" class="card-img-top" alt="Ảnh phòng" style="height: 220px; object-fit: cover;">
+                        <span class="position-absolute top-0 end-0 m-3 badge bg-white text-danger shadow-sm rounded-pill">
+                            <i class="fa-regular fa-heart"></i>
+                        </span>
+                        <span class="position-absolute bottom-0 start-0 m-3 badge bg-primary shadow-sm">
+                            {{ phong.loai_phong or 'Phòng trọ' }}
+                        </span>
                         {% if phong.status == 'da_thue' %}
-                            <p class="status" style="color: red;">🚫 Đã hết phòng</p>
-                        {% else %}
-                            <p class="status" style="color: green;">✅ Còn phòng</p>
+                            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="background: rgba(0,0,0,0.6); color: white; font-weight: bold; letter-spacing: 2px;">
+                                ĐÃ HẾT PHÒNG
+                            </div>
                         {% endif %}
-                        
-                        <p class="price">{{ "{:,.0f}".format(phong.gia|float).replace(",", ".") }} VNĐ</p>
                     </div>
 
-                    <a href="/chitiet/{{ phong.id }}" class="btn-detail">Chi Tiết</a>
-                </div>
-                {% endfor %}
-            {% else %}
-                <div style="text-align: center; margin-top: 50px; color: #888;">
-                    <i class="fa-solid fa-box-open" style="font-size: 40px;"></i>
-                    <p>Không tìm thấy phòng nào.</p>
-                </div>
-            {% endif %}
-        </section>
-    </main>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold text-dark text-truncate">{{ phong.ten }}</h5>
+                        <p class="card-text text-muted small mb-2">
+                            <i class="fa-solid fa-location-dot text-danger me-1"></i> {{ phong.dia_chi }}
+                        </p>
+                        <div class="mt-auto d-flex justify-content-between align-items-center">
+                            <h5 class="text-primary fw-bold mb-0">
+                                {{ "{:,.0f}".format(phong.gia|float).replace(",", ".") }} <small class="text-muted fs-6">đ/tháng</small>
+                            </h5>
+                        </div>
+                    </div>
 
-</body>
-</html>
+                    <div class="card-footer bg-white border-0 pt-0 pb-3">
+                        <div class="d-grid gap-2 d-md-flex">
+                            <a href="/chitiet/{{ phong.id }}" class="btn btn-outline-primary rounded-pill w-100 fw-bold">Xem chi tiết</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center py-5">
+                <img src="https://cdn-icons-png.flaticon.com/512/7486/7486754.png" width="100" class="mb-3 opacity-50">
+                <h5 class="text-muted">Không tìm thấy phòng nào phù hợp.</h5>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

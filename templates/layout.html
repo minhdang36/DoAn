@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TroSinhVien - Tìm Phòng Nhanh</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary fs-4" href="/">
+                <i class="fa-solid fa-house-chimney"></i> TroSinhVien
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link fw-semibold" href="/">Trang chủ</a></li>
+                    
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.role == 'student' %}
+                            <li><a class="dropdown-item py-2" href="/lich-su"><i class="fa-solid fa-clock-rotate-left me-2 text-info"></i> Lịch sử thuê</a></li>
+                                    <li><a class="dropdown-item py-2" href="/danh-sach-yeu-thich"><i class="fa-solid fa-heart me-2 text-danger"></i> Phòng yêu thích</a></li>
+                        {% endif %}
+                        
+                        {% if current_user.role == 'landlord' or current_user.role == 'admin' %}
+                            <li class="nav-item"><a class="nav-link" href="/quanlytin">Quản lý tin</a></li>
+                            <li class="nav-item ms-2">
+                                <a href="/dangtin" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                                    <i class="fa-solid fa-plus"></i> Đăng Tin
+                                </a>
+                            </li>
+                        {% endif %}
+                            
+                        {% if current_user.role == 'admin' %}
+                            <li class="nav-item ms-2">
+                                <a href="/admin" class="btn btn-danger rounded-pill px-3 shadow-sm fw-bold">
+                                    <i class="fa-solid fa-user-shield"></i> Trang Quản Trị
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        <li class="nav-item dropdown ms-3">
+                            <a class="nav-link dropdown-toggle fw-bold text-dark" href="#" role="button" data-bs-toggle="dropdown">
+                                <img src="https://ui-avatars.com/api/?name={{ current_user.full_name }}&background=random" class="rounded-circle me-1" width="30">
+                                {{ current_user.full_name }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                                <li><a class="dropdown-item" href="/profile"><i class="fa-solid fa-user me-2"></i> Hồ sơ</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="/logout"><i class="fa-solid fa-right-from-bracket me-2"></i> Đăng xuất</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item ms-2"><a class="btn btn-outline-primary rounded-pill px-4" href="/login">Đăng Nhập</a></li>
+                        <li class="nav-item ms-2"><a class="btn btn-primary rounded-pill px-4 shadow-sm" href="/register">Đăng Ký</a></li>
+                    {% endif %}
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <footer class="bg-dark text-light py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="fw-bold text-primary">TroSinhVien.com</h5>
+                    <p class="text-secondary small">Nền tảng tìm kiếm phòng trọ uy tín, nhanh chóng dành riêng cho sinh viên Việt Nam.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h6 class="fw-bold">Liên kết nhanh</h6>
+                    <ul class="list-unstyled text-secondary small">
+                        <li><a href="/" class="text-decoration-none text-secondary">Trang chủ</a></li>
+                        <li><a href="#" class="text-decoration-none text-secondary">Về chúng tôi</a></li>
+                        <li><a href="#" class="text-decoration-none text-secondary">Chính sách bảo mật</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="fw-bold">Liên hệ</h6>
+                    <p class="text-secondary small"><i class="fa-solid fa-phone me-2"></i> 0912.345.678</p>
+                    <p class="text-secondary small"><i class="fa-solid fa-envelope me-2"></i> hotro@trosinhvien.com</p>
+                </div>
+            </div>
+            <hr class="border-secondary">
+            <div class="text-center text-secondary small">
+                &copy; 2025 TroSinhVien Team. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4">
+        
+        <div class="col-lg-3">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="fw-bold text-primary mb-0"><i class="fa-solid fa-user-shield me-2"></i> Admin Panel</h5>
+                </div>
+                <div class="list-group list-group-flush rounded-bottom-4">
+                    <a href="/admin" class="list-group-item list-group-item-action border-0 py-3 text-secondary">
+                        <i class="fa-solid fa-chart-pie me-2"></i> Thống kê chung
+                    </a>
+                    <a href="/admin/users" class="list-group-item list-group-item-action border-0 py-3 text-secondary">
+                        <i class="fa-solid fa-users me-2"></i> Quản lý người dùng
+                    </a>
+                    <a href="/admin/posts" class="list-group-item list-group-item-action border-0 py-3 text-secondary">
+                        <i class="fa-solid fa-file-lines me-2"></i> Quản lý bài đăng
+                    </a>
+                    <a href="/admin/utilities" class="list-group-item list-group-item-action active fw-bold border-0 py-3">
+                        <i class="fa-solid fa-list-check me-2"></i> Quản lý tiện ích
+                    </a>
+                    
+                    <a href="/admin/backup" class="list-group-item list-group-item-action border-0 py-3 text-secondary">
+                        <i class="fa-solid fa-database me-2"></i> Sao lưu dữ liệu
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            <h3 class="fw-bold mb-4 text-dark">Quản Lý Tiện Ích</h3>
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+                <h6 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-plus-circle"></i> Thêm tiện ích mới</h6>
+                <form action="/admin/utilities/add" method="POST" class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label class="fw-bold small text-secondary">Tên tiện ích</label>
+                        <input type="text" name="ten" class="form-control bg-light border-0 rounded-3" placeholder="VD: Thang máy, Camera..." required>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="fw-bold small text-secondary">Icon (FontAwesome Class)</label>
+                        <input type="text" name="icon" class="form-control bg-light border-0 rounded-3" placeholder="VD: fa-elevator" required>
+                        <small class="text-muted" style="font-size: 11px;">
+                            <a href="https://fontawesome.com/search?o=r&m=free" target="_blank" class="text-decoration-none">
+                                <i class="fa-solid fa-link"></i> Tra cứu mã icon tại đây
+                            </a>
+                        </small>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100 fw-bold rounded-pill shadow-sm">
+                            Thêm
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-0 py-3">
+                    <h6 class="fw-bold mb-0">Danh sách hiện có ({{ tien_ich_list|length }})</h6>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4 py-3 text-secondary" style="width: 10%;">ID</th>
+                                <th class="text-secondary" style="width: 15%;">Icon</th>
+                                <th class="text-secondary" style="width: 55%;">Tên tiện ích</th>
+                                <th class="text-end pe-4 text-secondary" style="width: 20%;">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if tien_ich_list %}
+                                {% for ti in tien_ich_list %}
+                                <tr>
+                                    <td class="ps-4 fw-bold text-muted">#{{ ti.id }}</td>
+                                    <td>
+                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center border" style="width: 40px; height: 40px;">
+                                            <i class="fa-solid {{ ti.icon }} text-primary fs-5"></i>
+                                        </div>
+                                    </td>
+                                    <td class="fw-bold text-dark fs-6">{{ ti.ten_tien_ich }}</td>
+                                    <td class="text-end pe-4">
+                                        <a href="/admin/utilities/delete/{{ ti.id }}" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('CẢNH BÁO: Xóa tiện ích này sẽ làm mất nó khỏi tất cả các bài đăng đang sử dụng. Bạn chắc chắn chứ?')">
+                                            <i class="fa-solid fa-trash me-1"></i> Xóa
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center py-5 text-muted">
+                                        <i class="fa-regular fa-folder-open fs-1 mb-3 opacity-25"></i>
+                                        <p>Chưa có tiện ích nào được tạo.</p>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

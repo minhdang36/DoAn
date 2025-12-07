@@ -1,57 +1,113 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Sửa Tin Đăng</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    <header>
-        <div class="logo">🏠 TimTroSinhVien.com</div>
-        <nav><a href="/quanlytin">Quay lại quản lý</a></nav>
-    </header>
+{% extends "layout.html" %}
 
-    <main>
-        <div class="khung-dang-tin">
-            <h2>Chỉnh sửa thông tin phòng</h2>
-            <form method="POST" enctype="multipart/form-data">
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow rounded-4 p-4 p-md-5">
                 
-                <div class="nhom-input">
-                    <label>Tiêu đề:</label>
-                    <input type="text" name="ten" value="{{ phong.ten }}" required>
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold text-primary"><i class="fa-solid fa-pen-to-square"></i> Chỉnh Sửa Tin Đăng</h2>
                 </div>
 
-                <div class="hang-ngang">
-                    <div class="nhom-input">
-                        <label>Giá (VNĐ):</label>
-                        <input type="text" name="gia" value="{{ phong.gia }}" required>
+                <form method="POST" enctype="multipart/form-data" id="form-sua-tin">
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tiêu đề tin</label>
+                        <input type="text" name="ten" value="{{ phong.ten }}" class="form-control bg-light border-0 rounded-3 py-2" required maxlength="255">
                     </div>
-                </div>
 
-                <div class="nhom-input">
-                    <label>Địa chỉ:</label>
-                    <input type="text" name="dia_chi" value="{{ phong.dia_chi }}" required>
-                </div>
-                <div class="nhom-input">
-                    <label>Loại phòng:</label>
-                    <select name="loai_phong" required style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 10px;">
-                        <option value="Khép kín" {% if phong.loai_phong == 'Khép kín' %}selected{% endif %}>Phòng trọ khép kín</option>
-                        <option value="Chung cư" {% if phong.loai_phong == 'Chung cư' %}selected{% endif %}>Chung cư mini</option>
-                        <option value="Trọ" {% if phong.loai_phong == 'Trọ' %}selected{% endif %}>Phòng trọ giá rẻ</option>
-                        <option value="Nguyên căn" {% if phong.loai_phong == 'Nguyên căn' %}selected{% endif %}>Nhà nguyên căn</option>
-                        <option value="KTX" {% if phong.loai_phong == 'KTX' %}selected{% endif %}>Ký túc xá / Homestay</option>
-                    </select>
-                </div>
-                <div class="nhom-input">
-                    <label>Mô tả:</label>
-                    <textarea name="mo_ta" rows="5">{{ phong.mo_ta }}</textarea>
-                </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Giá thuê (VNĐ)</label>
+                            <input type="text" name="gia" id="gia-input" 
+                                   value="{{ '{:.0f}'.format(phong.gia|float) }}"
+                                   class="form-control bg-light border-0 rounded-3 py-2 fw-bold text-primary" 
+                                   required maxlength="20" autocomplete="off">
+                            <small id="doc-so-tien" class="fw-bold fst-italic text-success ms-1" style="font-size: 12px;"></small>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Diện tích (m²)</label>
+                            <input type="number" name="dien_tich" value="{{ phong.dien_tich }}" class="form-control bg-light border-0 rounded-3 py-2" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Loại phòng</label>
+                            <select name="loai_phong" class="form-select bg-light border-0 rounded-3 py-2" required>
+                                <option value="Khép kín" {% if phong.loai_phong == 'Khép kín' %}selected{% endif %}>Khép kín</option>
+                                <option value="Chung cư" {% if phong.loai_phong == 'Chung cư' %}selected{% endif %}>Chung cư mini</option>
+                                <option value="Trọ" {% if phong.loai_phong == 'Trọ' %}selected{% endif %}>Trọ giá rẻ</option>
+                                <option value="Nguyên căn" {% if phong.loai_phong == 'Nguyên căn' %}selected{% endif %}>Nhà nguyên căn</option>
+                                <option value="KTX" {% if phong.loai_phong == 'KTX' %}selected{% endif %}>KTX / Homestay</option>
+                            </select>
+                        </div>
+                    </div>
 
-                <p><i>(Tính năng đổi ảnh đang được cập nhật...)</i></p>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Địa chỉ chi tiết</label>
+                        <input type="text" name="dia_chi" value="{{ phong.dia_chi }}" class="form-control bg-light border-0 rounded-3 py-2" required>
+                    </div>
 
-                <button type="submit" class="nut-dang-tin" style="background-color: #2980b9;">Lưu Thay Đổi</button>
-            </form>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Mô tả tiện ích</label>
+                        <textarea name="mo_ta" rows="5" class="form-control bg-light border-0 rounded-3">{{ phong.mo_ta }}</textarea>
+                    </div>
+
+                    <div class="alert alert-warning d-flex align-items-center mb-4 p-2 rounded-3" role="alert">
+                        <i class="fa-solid fa-circle-info me-2 fs-5"></i>
+                        <small>Hiện tại hệ thống chưa hỗ trợ thay đổi hình ảnh hoặc tiện ích khi sửa tin.</small>
+                    </div>
+
+                    <div class="d-flex gap-3">
+                        <a href="/quanlytin" class="btn btn-light rounded-pill py-3 px-4 fw-bold shadow-sm flex-grow-1">Hủy bỏ</a>
+                        <button type="submit" class="btn btn-primary rounded-pill py-3 px-4 fw-bold shadow-sm flex-grow-1 hover-up">
+                            <i class="fa-solid fa-floppy-disk me-2"></i> Lưu Thay Đổi
+                        </button>
+                    </div>
+
+                </form>
+            </div>
         </div>
-    </main>
-</body>
-</html>
+    </div>
+</div>
+
+<script>
+    const giaInput = document.getElementById('gia-input');
+    const docSoText = document.getElementById('doc-so-tien');
+    const form = document.getElementById('form-sua-tin');
+
+    function formatMoney(value) {
+        if (!value) return '';
+        let rawValue = value.toString().replace(/\D/g, '');
+        return new Intl.NumberFormat('vi-VN').format(rawValue);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        giaInput.value = formatMoney(giaInput.value);
+    });
+
+    giaInput.addEventListener('input', function(e) {
+        let rawValue = this.value.replace(/\D/g, '');
+        if (rawValue === '') {
+            this.value = '';
+            docSoText.innerText = '';
+            return;
+        }
+        this.value = formatMoney(rawValue);
+        let num = parseInt(rawValue);
+        if (num >= 1000000) {
+            let trieu = (num / 1000000).toFixed(1).replace('.0', '');
+            docSoText.innerText = `👉 ${trieu} triệu đồng`;
+        } else if (num >= 1000) {
+            let nghin = (num / 1000).toFixed(0);
+            docSoText.innerText = `👉 ${nghin} nghìn đồng`;
+        } else {
+            docSoText.innerText = '';
+        }
+    });
+
+    form.addEventListener('submit', function(e) {
+        let rawValue = giaInput.value.replace(/\./g, ''); 
+        giaInput.value = rawValue; 
+    });
+</script>
+{% endblock %}

@@ -1,57 +1,80 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Lịch Sử Thuê Trọ</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    <header>
-        <div class="logo">🏠 TimTroSinhVien.com</div>
-        <nav>
-            <a href="/">Trang chủ</a>
-            <a href="/profile">Hồ sơ cá nhân</a>
-            <a href="/logout">Đăng xuất</a>
-        </nav>
-    </header>
+{% extends "layout.html" %}
 
-    <main>
-        <h2>Lịch sử liên hệ thuê phòng của bạn</h2>
-        
-        {% if lich_su %}
-            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-                <thead>
-                    <tr style="background-color: #34495e; color: white;">
-                        <th style="padding: 10px;">Phòng trọ</th>
-                        <th style="padding: 10px;">Tin nhắn bạn gửi</th>
-                        <th style="padding: 10px;">Thời gian</th>
-                        <th style="padding: 10px;">Trạng thái</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in lich_su %}
-                    <tr style="border-bottom: 1px solid #ddd;">
-                        <td style="padding: 10px;">
-                            <img src="/static/images/{{ item.anh }}" width="60" style="vertical-align: middle;">
-                            <a href="/chitiet/{{ item.post_id }}"><strong>{{ item.ten }}</strong></a><br>
-                            <small>{{ item.gia }}</small>
-                        </td>
-                        <td style="padding: 10px;">{{ item.message }}</td>
-                        <td style="padding: 10px;">{{ item.created_at }}</td>
-                        <td style="padding: 10px;">
-                            {% if item.status == 'pending' %}
-                                <span style="color: orange;">⏳ Đang chờ chủ nhà</span>
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold text-dark">🕒 Lịch Sử Liên Hệ</h2>
+                <a href="/" class="btn btn-outline-primary rounded-pill px-4 shadow-sm">
+                    <i class="fa-solid fa-magnifying-glass"></i> Tìm phòng mới
+                </a>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="py-3 ps-4">Phòng trọ quan tâm</th>
+                                <th class="py-3">Tin nhắn mở đầu</th>
+                                <th class="py-3">Thời gian gửi</th>
+                                <th class="py-3 text-end pe-4">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if lich_su %}
+                                {% for item in lich_su %}
+                                <tr>
+                                    <td class="ps-4" style="min-width: 250px;">
+                                        <div class="d-flex align-items-center">
+                                            <img src="/static/images/{{ item.anh }}" class="rounded-3 me-3 shadow-sm" width="70" height="60" style="object-fit: cover;">
+                                            <div>
+                                                <a href="/chitiet/{{ item.phong_id }}" class="text-decoration-none fw-bold text-dark d-block text-truncate" style="max-width: 200px;">
+                                                    {{ item.ten }}
+                                                </a>
+                                                <small class="text-primary fw-bold">
+                                                    {{ "{:,.0f}".format(item.gia|float).replace(",", ".") }} đ
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    
+                                    <td style="max-width: 300px;">
+                                        <div class="p-2 bg-light rounded-3 small text-secondary fst-italic border">
+                                            "{{ item.message }}"
+                                        </div>
+                                    </td>
+                                    
+                                    <td>
+                                        <small class="text-muted">
+                                            <i class="fa-regular fa-clock me-1"></i> {{ item.created_at }}
+                                        </small>
+                                    </td>
+                                    
+                                    <td class="text-end pe-4">
+                                        <a href="/chat/{{ item.id }}" class="btn btn-sm btn-primary rounded-pill px-3 fw-bold shadow-sm">
+                                            <i class="fa-solid fa-comments me-1"></i> Chat với chủ
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
                             {% else %}
-                                <span style="color: green;">✅ Đã phản hồi</span>
+                                <tr>
+                                    <td colspan="4" class="text-center py-5">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/2748/2748558.png" width="80" class="mb-3 opacity-50">
+                                        <h5 class="text-muted">Bạn chưa liên hệ thuê phòng nào cả.</h5>
+                                        <p class="text-secondary small">Hãy dạo một vòng trang chủ để tìm phòng ưng ý nhé!</p>
+                                    </td>
+                                </tr>
                             {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>Bạn chưa liên hệ thuê phòng nào cả. <a href="/">Tìm phòng ngay</a></p>
-        {% endif %}
-    </main>
-</body>
-</html>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

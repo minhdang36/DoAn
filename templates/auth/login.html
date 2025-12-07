@@ -1,31 +1,33 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Đăng Nhập - Tìm Trọ</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    <header>
-        <div class="logo">🏠 TimTroSinhVien.com</div>
-        <nav><a href="/">Trang chủ</a></nav>
-    </header>
-    <main>
-        <div class="khung-dang-tin" style="max-width: 400px;">
-            <h2>Đăng Nhập Hệ Thống</h2>
-            <form action="/login" method="POST">
-                <div class="nhom-input">
-                    <label>Tên đăng nhập:</label>
-                    <input type="text" name="username" required>
-                </div>
-                <div class="nhom-input">
-                    <label>Mật khẩu:</label>
-                    <input type="password" name="password" required>
-                </div>
-                <button type="submit" class="nut-dang-tin">Đăng Nhập</button>
-            </form>
-            <p style="margin-top: 15px;">Chưa có tài khoản? <a href="/register">Đăng ký ngay</a></p>
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden" style="max-width: 900px; width: 100%;">
+        <div class="row g-0">
+            <div class="col-md-6 d-none d-md-block" style="background: url('https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover;"></div>
+            
+            <div class="col-md-6 p-5 bg-white">
+                <h2 class="fw-bold text-primary mb-4">Chào mừng trở lại!</h2>
+                <form action="/login" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary">Tên đăng nhập</label>
+                        <input type="text" name="username" class="form-control rounded-pill px-3 py-2 bg-light border-0" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-secondary">Mật khẩu</label>
+                        <input type="password" name="password" class="form-control rounded-pill px-3 py-2 bg-light border-0" required>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary rounded-pill py-2 fw-bold shadow-sm">Đăng Nhập</button>
+                    </div>
+                </form>
+                
+                <p class="text-center mt-4 text-secondary small">
+                    Chưa có tài khoản? <a href="/register" class="text-primary fw-bold text-decoration-none">Đăng ký ngay</a>
+                </p>
+            </div>
         </div>
-    </main>
-</body>
-</html>
+    </div>
+</div>
+{% endblock %}
