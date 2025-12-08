@@ -5,6 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             <div class="card border-0 shadow rounded-4 p-4">
+                
                 <div class="text-center mb-4">
                     <img src="https://ui-avatars.com/api/?name={{ user_info.full_name }}&size=100&background=random" class="rounded-circle mb-3 shadow-sm">
                     <h3 class="fw-bold">{{ user_info.full_name }}</h3>
@@ -64,8 +65,14 @@
                         <input type="text" name="phone" value="{{ user_info.phone or '' }}" class="form-control bg-light border-0 rounded-3" required maxlength="10">
                     </div>
 
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary rounded-pill py-2 fw-bold">Lưu Thay Đổi</button>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary rounded-pill py-2 fw-bold shadow-sm">
+                            <i class="fa-solid fa-floppy-disk me-1"></i> Lưu Thay Đổi
+                        </button>
+                        
+                        <a href="/doi-mat-khau" class="btn btn-warning rounded-pill py-2 fw-bold shadow-sm text-dark">
+                            <i class="fa-solid fa-key me-1"></i> Đổi Mật Khẩu
+                        </a>
                     </div>
                 </form>
             </div>

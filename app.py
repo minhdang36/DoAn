@@ -693,6 +693,44 @@ def admin_delete_utility(id):
     conn.commit()
     conn.close()
     return redirect('/admin/utilities')
-
+# --- Thêm vào app.py ---
+@app.route('/doi-mat-khau', methods=['GET', 'POST'])
+@login_required
+def doi_mat_khau():
+    if request.method == 'POST':
+        mat_khau_cu = request.form['mat_khau_cu']
+        mat_khau_moi = request.form['mat_khau_moi']
+        xac_nhan_mk = request.form['xac_nhan_mk']
+        
+        # 1. Kiểm tra xác nhận mật khẩu
+        if mat_khau_moi != xac_nhan_mk:
+            flash('Mật khẩu mới và xác nhận không khớp!')
+            return redirect('/doi-mat-khau')
+            
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        # 2. Kiểm tra mật khẩu cũ
+        cursor.execute("SELECT * FROM users WHERE id = %s AND password = %s", (current_user.id, mat_khau_cu))
+        user = cursor.fetchone()
+        
+        if user:
+            # 3. Cập nhật mật khẩu mới
+            cursor.execute("UPDATE users SET password = %s WHERE id = %s", (mat_khau_moi, current_user.id))
+            conn.commit()
+            conn.close()
+            
+            # --- THAY ĐỔI Ở ĐÂY ---
+            # Bỏ dòng logout đi, chuyển hướng về trang Profile luôn
+            flash('Đổi mật khẩu thành công!') 
+            return redirect('/profile') 
+            # ----------------------
+            
+        else:
+            conn.close()
+            flash('Mật khẩu cũ không chính xác!')
+            return redirect('/doi-mat-khau')
+            
+    return render_template('auth/doi_mat_khau.html')
 if __name__ == '__main__':
     app.run(debug=True)
