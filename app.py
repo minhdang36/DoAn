@@ -693,7 +693,7 @@ def admin_delete_utility(id):
     conn.commit()
     conn.close()
     return redirect('/admin/utilities')
-# --- Thêm vào app.py ---
+
 @app.route('/doi-mat-khau', methods=['GET', 'POST'])
 @login_required
 def doi_mat_khau():
