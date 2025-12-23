@@ -7,9 +7,12 @@ import mysql.connector
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 app = Flask(__name__)
-app.secret_key = 'khoa_bi_mat_sieu_cap' 
-app.config['UPLOAD_FOLDER'] = 'static/images'
+app.secret_key = 'khoa_bi_mat_sieu_cap'
 
+# --- CẤU HÌNH ĐƯỜNG DẪN UPLOAD (SỬA ĐỔI) ---
+# Sử dụng os.path.join để đảm bảo đường dẫn đúng trên mọi hệ điều hành
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'static', 'images')
 # --- CẤU HÌNH FLASK-LOGIN ---
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -398,12 +401,20 @@ def dangtin():
         mo_ta = request.form['mo_ta']
         loai_phong = request.form['loai_phong']
         
+        # --- SỬA LỖI: TỰ ĐỘNG TẠO THƯ MỤC NẾU CHƯA CÓ ---
+        # Lấy đường dẫn từ config
+        upload_path = app.config['UPLOAD_FOLDER']
+        if not os.path.exists(upload_path):
+            os.makedirs(upload_path)
+        # -----------------------------------------------
+
         ten_anh = 'phong1.jpg'
         if 'hinh_anh' in request.files:
             file = request.files['hinh_anh']
             if file.filename != '':
                 ten_goc = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], ten_goc))
+                # Lưu file vào đường dẫn an toàn
+                file.save(os.path.join(upload_path, ten_goc))
                 ten_anh = ten_goc
 
         cursor = conn.cursor()
@@ -427,7 +438,8 @@ def dangtin():
             for file in files:
                 if file and file.filename != '':
                     ten_anh_phu = secure_filename(file.filename)
-                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], ten_anh_phu))
+                    # Lưu file (Thư mục đã được đảm bảo tạo ở trên rồi)
+                    file.save(os.path.join(upload_path, ten_anh_phu))
                     cursor.execute("INSERT INTO hinh_anh_phong (phong_id, ten_anh) VALUES (%s, %s)", (phong_id_moi, ten_anh_phu))
 
         conn.commit()
@@ -720,11 +732,8 @@ def doi_mat_khau():
             conn.commit()
             conn.close()
             
-            # --- THAY ĐỔI Ở ĐÂY ---
-            # Bỏ dòng logout đi, chuyển hướng về trang Profile luôn
             flash('Đổi mật khẩu thành công!') 
             return redirect('/profile') 
-            # ----------------------
             
         else:
             conn.close()
