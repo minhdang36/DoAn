@@ -36,3 +36,14 @@ body {
     font-weight: 500;
     letter-spacing: 0.5px;
 }
+/* Sửa lỗi hiển thị ảnh trong carousel (slide) */
+.carousel-item img {
+    /* Đặt chiều cao cố định cho khung ảnh để slider không bị nhảy */
+    height: 500px !important; 
+    
+    /* QUAN TRỌNG: Dùng contain để hiển thị toàn bộ ảnh, không bị cắt */
+    object-fit: contain !important;
+    
+    /* Đặt màu nền để phần thừa trông đỡ trống (tuỳ chọn) */
+    background-color: #f8f9fa; 
+}
